@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Meta Ads Live Dashboard</title>
+<style>
+:root{
+ color-scheme:light;
+ --bg:#ffffff;--canvas:#FBFCFE;--soft:#F3F7FC;--line:#E4EBF3;--line2:#EFF4F9;
+ --tx:#12263F;--tx2:#5B6B7E;--tx3:#93A2B4;
+ --primary:#06A6FF;--primary-weak:#E6F6FF;--primary-bd:#BCE6FF;
+ --blue:#06A6FF;--green:#0891D6;--yellow:#3E92E0;--orange:#2E7FD6;--red:#0B4C99;--purple:#2F6FE0;--cyan:#06A6FF;
+ --gbg:#E6F5FF;--gbd:#BFE4FF;--rbg:#EAF0F8;--rbd:#C6D6EC;--ybg:#EBF4FF;--ybd:#C9E4FF;
+ --bbg:#E6F2FF;--bbd:#BFE0FF;--obg:#EBF3FF;--obd:#CCE4FA;--pbg:#EDF1FE;--pbd:#D6E0FB;
+ --sh:0 1px 2px rgba(16,42,70,.03),0 1px 2px rgba(16,42,70,.04);
+ --sh2:0 4px 14px rgba(16,42,70,.08),0 2px 6px rgba(16,42,70,.05);
+ --r:16px;--sp:16px;
+ --fz-page:20px;--fz-sec:16px;--fz-card:13.5px;--fz-body:12.5px;--fz-sub:11px;--fz-kpi:24px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--canvas)}
+body{color:var(--tx);font-family:"Inter","Pretendard",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;letter-spacing:-.006em}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#d9dce3;border-radius:8px;border:2px solid var(--canvas)}
+::-webkit-scrollbar-thumb:hover{background:#c3c8d2}
+
+/* ===== LAYOUT ===== */
+.layout{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;background:var(--bg);border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:4px;z-index:30}
+.brandbox{display:flex;align-items:center;gap:11px;padding:6px 10px 18px}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#06A6FF,#3EC5FF);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;box-shadow:0 4px 12px rgba(6,166,255,.30);flex:0 0 36px}
+.bname{font-size:14.5px;font-weight:700;line-height:1.2;display:flex;flex-direction:column}
+.bname span{font-size:11px;color:var(--tx3);font-weight:500;margin-top:1px}
+.navlabel{font-size:10.5px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 6px}
+#tabs{display:flex;flex-direction:column;gap:3px}
+.tab{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:none;border-radius:10px;background:none;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--tx2);cursor:pointer;white-space:nowrap;transition:background .15s,color .15s;text-align:left}
+.tab:hover{background:var(--soft);color:var(--tx)}
+.tab.on{background:var(--primary-weak);color:var(--primary)}
+.tab .dt{width:8px;height:8px;border-radius:50%;flex:0 0 8px}
+.sidefoot{margin-top:auto;font-size:11px;color:var(--tx3);line-height:1.6;padding:12px;background:var(--soft);border-radius:11px;font-weight:500}
+.sidefoot b{color:var(--tx2);font-weight:700}
+
+/* ===== MAIN / TOPBAR ===== */
+.main{min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line);padding:13px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.tbtitle{font-size:19px;font-weight:750;letter-spacing:-.02em;display:flex;flex-direction:column;line-height:1.15}
+.tbtitle span{font-size:12px;color:var(--tx3);font-weight:500;margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.searchbox{display:flex;align-items:center;gap:8px;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:7px 12px;font-size:12.5px;color:var(--tx3);font-weight:500;min-width:0;width:152px;transition:border-color .15s,box-shadow .15s}
+.searchbox:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-weak);background:#fff}
+.searchbox input{border:none;background:none;outline:none;font-family:inherit;font-size:12.5px;color:var(--tx);font-weight:500;width:100%;padding:0}
+.searchbox input::placeholder{color:var(--tx3);font-weight:500}
+.qn{font-size:11px;font-weight:700;color:var(--primary);white-space:nowrap}
+mark.hit{background:#fef08a;color:inherit;border-radius:3px;padding:0 2px;box-shadow:0 0 0 2px #fef08a}
+tr.hitrow>td,.bwc.hitrow,.lg-r.hitrow{background:#fffbeb !important}
+.flash{animation:flash 1.4s ease}
+@keyframes flash{0%,100%{box-shadow:0 0 0 0 rgba(79,70,229,0)}30%{box-shadow:0 0 0 3px rgba(79,70,229,.35)}}
+.chip{background:var(--soft);border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-size:11.5px;color:var(--tx2);font-weight:500;white-space:nowrap}
+.chip b{color:var(--tx);font-weight:700}
+.chip.goal{background:var(--primary-weak);border-color:var(--primary-bd);color:var(--primary)}
+.chip.goal b{color:var(--primary)}
+.iconbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--tx2);cursor:pointer;transition:.15s}
+.iconbtn:hover{background:var(--soft);color:var(--tx);border-color:var(--tx3)}
+.profile{display:flex;align-items:center;gap:9px;padding:4px 10px 4px 4px;border:1px solid var(--line);border-radius:30px;background:var(--bg)}
+.profile .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#06A6FF,#3EC5FF);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.profile .pn{font-size:12.5px;font-weight:650}
+
+/* ===== CONTENT ===== */
+.content{padding:24px 32px 80px;max-width:1560px;width:100%;margin:0 auto}
+section{margin-bottom:24px}
+.shead{display:flex;align-items:center;gap:10px;margin-bottom:15px}
+.snum{width:24px;height:24px;border-radius:7px;background:var(--primary-weak);color:var(--primary);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+h1{font-size:17px;font-weight:700}
+h2{font-size:16px;font-weight:700;letter-spacing:-.015em}
+.hkr{font-size:12.5px;font-weight:500;color:var(--tx3)}
+.note{font-size:11.5px;color:var(--tx3);margin-left:auto;font-weight:500}
+.sub{font-size:12px;color:var(--tx3)}
+
+/* CARD BASE */
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--sh)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card,.kpi,.sig,.bwc,.ic,.goal-t{transition:transform .2s ease,box-shadow .2s ease}
+.card:hover,.kpi:hover,.sig:hover,.bwc:hover,.ic:hover,.goal-t:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+
+/* EXEC SUMMARY */
+.sumb{display:grid;grid-template-columns:1.12fr 1fr;gap:16px;margin-bottom:16px}
+.sb{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.sb-h{font-size:13px;font-weight:700;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--soft)}
+.sb-b{padding:6px 18px 14px}
+.kv{list-style:none}
+.kv li{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line2);font-size:14px;font-weight:650}
+.kv li:last-child{border-bottom:none}
+.kv .ico{width:22px;text-align:center;flex:0 0 22px;font-size:15px}
+.kv .sm{font-size:12px;color:var(--tx2);font-weight:500;margin-left:auto;text-align:right}
+.ar-u{color:var(--green);font-weight:800}.ar-d{color:var(--red);font-weight:800}
+.ab{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:12px;border-left-width:4px}
+.ab:last-child{margin-bottom:0}
+.ab .abt{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ab .abt .cnt{font-size:10.5px;font-weight:700;color:var(--tx2);background:var(--soft);border:1px solid var(--line);border-radius:20px;padding:3px 9px;margin-left:auto}
+.ab .abd{font-size:12.5px;color:var(--tx2);line-height:1.7}
+.ab .abd b{color:var(--tx);font-weight:650}
+.ab.off{border-left-color:var(--red)}.ab.exp{border-left-color:var(--green)}.ab.imp{border-left-color:var(--yellow)}
+.ab.off .abt{color:var(--red)}.ab.exp .abt{color:var(--green)}.ab.imp .abt{color:var(--yellow)}
+
+/* KPI CARDS */
+.kpis{display:grid;grid-template-columns:repeat(7,1fr);gap:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--sh)}
+.kpi .t{font-size:11.5px;color:var(--tx2);font-weight:600;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.kpi .v{font-size:25px;font-weight:800;letter-spacing:-.035em;line-height:1}
+.kpi .v small{font-size:12px;font-weight:700;color:var(--tx3);margin-left:2px;letter-spacing:0}
+.kpi .d{font-size:11.5px;margin-top:9px;font-weight:600}
+.kpi .goal{font-size:10.5px;color:var(--tx3);margin-top:11px;border-top:1px solid var(--line2);padding-top:9px;font-weight:500;line-height:1.5}
+.st{font-size:9.5px;font-weight:700;padding:3px 7px;border-radius:6px}
+.st.g{background:var(--gbg);color:var(--green)}.st.y{background:var(--ybg);color:var(--yellow)}.st.r{background:var(--rbg);color:var(--red)}
+.up{color:var(--green)}.down{color:var(--red)}.mut{color:var(--tx3);font-weight:500}
+
+/* SIGNAL CARDS */
+.sigs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sig{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.sig .top{display:flex;align-items:center;gap:11px;padding:15px 18px;border-bottom:1px solid var(--line2)}
+.sig .top .bar{width:4px;height:30px;border-radius:3px}
+.sig.c1 .top .bar{background:var(--blue)}.sig.c2 .top .bar{background:var(--purple)}.sig.c3 .top .bar{background:var(--red)}
+.sig .top .nm{font-size:14.5px;font-weight:700;flex:1}
+.sig .bd{padding:22px}
+.sig .big{display:flex;gap:12px;margin-bottom:18px}
+.sig .bigm{flex:1;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+.sig .bigm .l{font-size:10.5px;color:var(--tx3);font-weight:600;display:flex;justify-content:space-between}
+.sig .bigm .v{font-size:22px;font-weight:800;letter-spacing:-.035em;margin-top:4px;line-height:1}
+.sig .bigm .v small{font-size:11px;font-weight:700;color:var(--tx3)}
+.sig .bigm .g{font-size:9.5px;margin-top:5px;font-weight:600;color:var(--tx3);line-height:1.4}
+.sig .sub2{font-size:12px;color:var(--tx2);margin-bottom:18px}
+.sigchart-h{font-size:10.5px;font-weight:700;color:var(--tx2);margin:4px 0 9px}
+.sigchart{position:relative;height:76px;margin-bottom:18px}
+.sigchart svg{position:absolute;inset:0;width:100%;height:100%}
+.sig .sub2 b{color:var(--tx);font-weight:700}
+.sig .vd{font-size:12.5px;line-height:1.65;padding:15px 16px;border-radius:12px}
+.sig .vd .ac{display:block;margin-top:6px;font-weight:700}
+.sig.win .vd{background:var(--gbg);color:#0891D6}
+.sig.mid .vd{background:var(--bbg);color:#2F6FE0}
+.sig.bad .vd{background:var(--rbg);color:#0B4C99}
+.sig .vd b{font-weight:700}
+
+/* CAMPAIGN BLOCK */
+.cmp{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:16px}
+.cmp-h{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line2);flex-wrap:wrap}
+.cmp-h .bar{width:4px;height:34px;border-radius:3px;flex:0 0 4px}
+.cmp-h .ci{flex:1;min-width:200px}
+.cmp-h .cname{font-size:14.5px;font-weight:700;letter-spacing:-.015em}
+.cmp-h .cmeta{font-size:11.5px;color:var(--tx3);margin-top:3px}
+.cmp-b{padding:18px 20px}
+.c1 .bar{background:var(--blue)}.c2 .bar{background:var(--purple)}.c3 .bar{background:var(--red)}
+.c1 .cname{color:var(--blue)}.c2 .cname{color:var(--purple)}.c3 .cname{color:var(--red)}
+.ckpi{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:16px}
+.ck{background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:12px 13px}
+.ck .l{font-size:10.5px;color:var(--tx3);font-weight:600;margin-bottom:5px;display:flex;justify-content:space-between}
+.ck .v{font-size:17px;font-weight:800;letter-spacing:-.03em}
+.ck .v small{font-size:10px;color:var(--tx3);font-weight:700}
+.ck .c{font-size:10.5px;margin-top:3px;font-weight:600}
+.cum{display:flex;align-items:center;flex-wrap:wrap;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:12px 15px;margin-bottom:16px}
+.cum-l{font-size:11px;font-weight:700;color:var(--tx2);margin-right:16px;white-space:nowrap}
+.cum-i{display:flex;flex-direction:column;padding:0 18px;border-left:1px solid var(--line);flex:1;min-width:108px}
+.cum-i span{font-size:10px;color:var(--tx3);font-weight:600}
+.cum-i b{font-size:14px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
+
+/* TABLE */
+.tw{overflow-x:auto;margin:0 -4px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:right;font-size:10.5px;color:var(--tx3);font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:9px 11px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--soft)}
+th:first-child,td:first-child{text-align:left}
+thead tr:first-child th{background:var(--soft)}
+th:first-child{border-top-left-radius:9px;border-bottom-left-radius:0}
+tr th:last-child{border-top-right-radius:9px}
+td{padding:12px 11px;border-bottom:1px solid var(--line2);text-align:right;white-space:nowrap;color:var(--tx2)}
+tbody tr{transition:background .12s}
+tbody tr:hover{background:var(--soft)}
+td.nm{font-weight:650;color:var(--tx)}
+td.sub{color:var(--tx3);font-size:11px}
+tfoot td{font-weight:800;color:var(--tx);border-top:1px solid var(--line);border-bottom:none;background:var(--soft)}
+th.grp{text-align:center;font-size:10px;font-weight:800;padding:7px 9px;border-bottom:1px solid var(--line);letter-spacing:.04em}
+th.grp.wk{background:var(--bbg);color:var(--blue)}
+th.grp.na{background:transparent;border-bottom-color:transparent}
+td.wkc,th.wkc{background:#fafbff}
+tbody tr:hover td.wkc{background:#f1f5ff}
+tr.dim td{background:#fcfcfd;color:var(--tx3)}
+tr.dim td.nm{color:var(--tx2)}
+th.srt{cursor:pointer;user-select:none;transition:color .12s}
+th.srt:hover{color:var(--tx)}
+th.srt::after{content:" ⇅";opacity:.35;font-size:9px}
+th.srt.asc::after{content:" ↑";opacity:1;color:var(--primary)}
+th.srt.desc::after{content:" ↓";opacity:1;color:var(--primary)}
+.badge{display:inline-block;padding:3px 9px;border-radius:7px;font-size:10.5px;font-weight:700;border:1px solid;white-space:nowrap}
+.b-scale{background:var(--gbg);color:var(--green);border-color:var(--gbd)}
+.b-stable{background:var(--bbg);color:var(--blue);border-color:var(--bbd)}
+.b-watch{background:var(--ybg);color:var(--yellow);border-color:var(--ybd)}
+.b-opt{background:var(--obg);color:var(--orange);border-color:var(--obd)}
+.b-off{background:var(--rbg);color:var(--red);border-color:var(--rbd)}
+.pos{color:var(--green);font-weight:700}.neg{color:var(--red);font-weight:700}
+
+/* CONCLUSION */
+.cc{margin-top:16px;padding:15px 16px;background:var(--soft);border:1px solid var(--line);border-radius:12px;font-size:12.5px;color:var(--tx2);line-height:1.75}
+.cc b{color:var(--tx);font-weight:650}
+.cc .k{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:6px;background:var(--tx);color:#fff;margin-right:8px;letter-spacing:.02em;vertical-align:1px}
+.cc .k.r{background:var(--red)}.cc .k.g{background:var(--green)}.cc .k.b{background:var(--primary)}
+.cc div+div{margin-top:8px}
+.est{display:inline-block;font-size:9.5px;padding:1px 6px;border-radius:6px;background:var(--pbg);color:var(--purple);border:1px solid var(--pbd);font-weight:700;vertical-align:1px}
+
+/* CHARTS */
+.chead{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.ctitle{font-size:13.5px;font-weight:700}
+.legend{display:flex;gap:12px;font-size:10.5px;color:var(--tx2);font-weight:500}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}
+.legend i.dash{width:12px;height:2px;border-radius:0;background:repeating-linear-gradient(90deg,#0576C9 0 4px,transparent 4px 7px)}
+svg{display:block;width:100%;height:auto;overflow:visible}
+/* TOP CUMULATIVE CARDS */
+.topcards{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;align-items:start}
+.tc{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--sh);transition:transform .2s,box-shadow .2s}
+.tc:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.tc .tl{font-size:12px;color:var(--tx3);font-weight:600;margin-bottom:12px}
+.tc .tv{font-size:25px;font-weight:800;letter-spacing:-.035em;line-height:1}
+.tc .tv small{font-size:12px;font-weight:700;color:var(--tx3);margin-left:2px}
+.tc .ts{font-size:11px;color:var(--tx2);font-weight:500;margin-top:10px}
+.tc .ts.down{color:var(--red);font-weight:600}
+.tc.hero{background:#fff;color:var(--tx)}
+.tc.hero .tl{color:var(--tx3)}
+/* WEEKLY SUMMARY cards+graph */
+.mcards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.mc4{grid-template-columns:repeat(4,1fr)}
+.mc{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:12px 13px}
+.mc .ml{font-size:11px;color:var(--tx3);font-weight:600}
+.mc .mv{font-size:20px;font-weight:800;letter-spacing:-.03em;margin:5px 0 7px}
+.mc .md{display:flex;align-items:center;gap:7px}
+.mc .ms{font-size:10.5px;color:var(--tx3)}
+.spark{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:11px 13px 4px;margin-bottom:11px}
+.spark-h{font-size:11px;font-weight:700;color:var(--tx2);margin-bottom:10px}
+.ichart{position:relative;height:210px;margin-bottom:22px}
+.ic-svg{position:absolute;inset:0;width:100%;height:100%}
+.ic-ov{position:absolute;inset:0;cursor:crosshair}
+.ic-vline{position:absolute;top:4px;bottom:18px;width:1px;background:rgba(6,166,255,.4);display:none}
+.ic-dot{position:absolute;width:11px;height:11px;border-radius:50%;background:#fff;border:3px solid #06A6FF;transform:translate(-50%,-50%);display:none;box-shadow:0 2px 7px rgba(6,166,255,.45)}
+.ic-tip{position:absolute;display:none;background:#fff;border:1px solid var(--line);box-shadow:var(--sh2);border-radius:10px;padding:8px 11px;font-size:11.5px;white-space:nowrap;pointer-events:none;z-index:5}
+.ic-tip b{display:block;color:var(--tx);font-weight:700;margin-bottom:2px}
+.ic-tip span{color:#06A6FF;font-weight:700}
+.ic-xlab{position:absolute;left:0;right:0;bottom:2px;height:14px}
+.ic-xlab span{position:absolute;transform:translateX(-50%);font-size:9.5px;color:var(--tx3);font-weight:600}
+.chips2{display:flex;gap:8px;flex-wrap:wrap}
+.chips2 span{font-size:11px;font-weight:600;color:var(--tx2);background:var(--soft);border:1px solid var(--line);border-radius:20px;padding:6px 11px}
+.mini-h{font-size:11px;font-weight:700;color:var(--tx2);margin-bottom:9px}
+.hbar{position:relative;height:28px;background:var(--soft);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:8px}
+.hbar-f{position:absolute;left:0;top:0;height:100%;border-radius:7px 0 0 7px;opacity:.82}
+.hbar-t{position:absolute;left:11px;top:0;height:100%;display:flex;align-items:center;font-size:11px;font-weight:700;color:var(--tx)}
+
+/* BEST / WORST */
+.bwc{border-radius:var(--r);padding:20px;border:1px solid;box-shadow:var(--sh);height:100%}
+.bwc.best{background:linear-gradient(160deg,#f0fdf4,#fff 55%);border-color:var(--gbd)}
+.bwc.worst{background:linear-gradient(160deg,#fef2f2,#fff 55%);border-color:var(--rbd)}
+.bwc.na{background:var(--soft);border-color:var(--line)}
+.bwc .tag{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.bwc.best .tag{color:var(--green)}.bwc.worst .tag{color:var(--red)}.bwc.na .tag{color:var(--tx3)}
+.bwc .cn{font-size:17px;font-weight:800;letter-spacing:-.02em;margin-bottom:3px}
+.bwc .cs{font-size:11px;color:var(--tx3);margin-bottom:14px}
+.mgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.m{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.m .ml{font-size:9px;color:var(--tx3);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.m .mv{font-size:13.5px;font-weight:800;margin-top:3px;letter-spacing:-.02em}
+.reason{font-size:12.5px;color:var(--tx2);line-height:1.7}
+.reason b{color:var(--tx);font-weight:650}
+.reason .rl{display:block;font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em;margin:11px 0 3px;font-weight:800}
+
+/* INSIGHT */
+.ic{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--sh)}
+.ic .ih{font-size:13.5px;font-weight:700;margin-bottom:9px}
+.ic p{font-size:12.5px;color:var(--tx2);line-height:1.7}
+.ic p b{color:var(--tx);font-weight:650}
+.ic .rec{margin-top:12px;padding:10px 12px;background:var(--primary-weak);border:1px solid var(--primary-bd);border-radius:10px;font-size:11.5px;color:var(--primary);font-weight:600;line-height:1.5}
+
+/* ACTION */
+.act{display:grid;grid-template-columns:120px 1fr 250px;gap:18px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh);margin-bottom:11px}
+.act .lft{display:flex;flex-direction:column;gap:8px}
+.pri{font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:7px;width:fit-content;border:1px solid}
+.p1{background:var(--rbg);color:var(--red);border-color:var(--rbd)}
+.p2{background:var(--gbg);color:var(--green);border-color:var(--gbd)}
+.p3{background:var(--ybg);color:var(--yellow);border-color:var(--ybd)}
+.p4{background:var(--pbg);color:var(--purple);border-color:var(--pbd)}
+.p5{background:var(--obg);color:var(--orange);border-color:var(--obd)}
+.act .ttl{font-size:13px;font-weight:700}
+.act .body{font-size:12.5px;color:var(--tx2);line-height:1.75}
+.act .body b{color:var(--tx);font-weight:650}
+.cg{display:inline-block;font-size:10px;font-weight:800;padding:1px 6px;border-radius:6px;margin-right:5px}
+.cg1{background:var(--bbg);color:var(--blue);border:1px solid var(--bbd)}
+.cg2{background:var(--pbg);color:var(--purple);border:1px solid var(--pbd)}
+.cg3{background:var(--rbg);color:var(--red);border:1px solid var(--rbd)}
+.act .impact{font-size:11.5px;color:var(--tx2);background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:11px 13px;line-height:1.6}
+.act .impact b{color:var(--tx);font-weight:700;display:block;margin-bottom:2px}
+.acards{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:16px}
+.acard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--sh);border-top:3px solid var(--line);transition:transform .2s ease,box-shadow .2s ease}
+.acard:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.acard.p1{border-top-color:var(--red)}.acard.p2{border-top-color:var(--green)}.acard.p3{border-top-color:var(--yellow)}.acard.p4{border-top-color:var(--purple)}.acard.p5{border-top-color:var(--orange)}
+.acard .ah{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.acard .acount{font-size:11px;font-weight:800;color:var(--tx2);background:var(--soft);border:1px solid var(--line);border-radius:20px;padding:3px 10px}
+.acard .atitle{font-size:12.5px;font-weight:700;margin-bottom:9px}
+.acard .afig{font-size:17px;font-weight:800;letter-spacing:-.02em;margin-bottom:9px}
+.acard.p1 .afig{color:var(--red)}.acard.p2 .afig{color:var(--green)}
+.acard .asub{font-size:11px;color:var(--tx3);line-height:1.5}
+.flowbars{display:flex;flex-direction:column;gap:11px}
+.flowrow{display:grid;grid-template-columns:110px 1fr 120px;gap:14px;align-items:center;font-size:12.5px}
+.flowrow .fn{font-weight:700;color:var(--tx)}
+.flowrow .fbar{height:24px;background:var(--soft);border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.flowrow .fbar span{display:block;height:100%;border-radius:6px;opacity:.85}
+.flowrow .fv{text-align:right;font-weight:800;color:var(--tx)}
+
+/* NEXT WEEK */
+.nwc{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--sh)}
+.nwc h3{font-size:13px;font-weight:700;margin-bottom:11px}
+.nwc ol{margin-left:17px;font-size:12.5px;color:var(--tx2);line-height:1.85}
+.nwc ol b{color:var(--tx);font-weight:650}
+.checklist .ci2{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line2);font-size:12.5px;color:var(--tx2);line-height:1.6}
+.checklist .ci2:last-child{border-bottom:none}
+.checklist .ci2 b{color:var(--tx);font-weight:700}
+.checklist .cn2{width:22px;height:22px;border-radius:7px;background:var(--soft);border:1px solid var(--line);font-size:10px;font-weight:700;color:var(--tx2);display:flex;align-items:center;justify-content:center;flex:0 0 22px;margin-top:1px}
+.goals{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.goal-t{background:var(--soft);border:1px solid var(--line);border-radius:13px;padding:15px 16px}
+.goal-t .gl{font-size:11px;color:var(--tx3);font-weight:600;margin-bottom:6px}
+.goal-t .gv{font-size:16px;font-weight:800;letter-spacing:-.02em}
+.goal-t .gv small{font-size:12px;color:var(--tx3);font-weight:700;margin-left:1px}
+.gbar{height:6px;background:var(--soft);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:10px 0 9px}
+.gbar span{display:block;height:100%;background:var(--primary);border-radius:6px}
+.goal-t .gs .gcur{display:block;font-size:11px;color:var(--tx3);font-weight:500}
+.goal-t .gs .gact{display:block;font-size:11.5px;color:var(--primary);font-weight:600;margin-top:5px;line-height:1.4}
+
+/* DETAIL TOGGLE */
+.dtog{margin:2px 0 16px;display:flex;justify-content:center}
+.dtog button{background:var(--bg);border:1px solid var(--line);border-radius:24px;padding:10px 22px;font-size:12.5px;font-weight:650;color:var(--tx2);cursor:pointer;font-family:inherit;box-shadow:var(--sh);transition:.15s}
+.dtog button:hover{color:var(--primary);border-color:var(--primary-bd);background:var(--primary-weak)}
+.dlabel{text-align:center;font-size:10.5px;color:var(--tx3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:26px 0 6px;position:relative}
+.dlabel::before,.dlabel::after{content:"";position:absolute;top:50%;width:28%;height:1px;background:var(--line)}
+.dlabel::before{left:4%}.dlabel::after{right:4%}
+
+/* DONUT */
+.dn-c{position:relative;max-width:180px;margin:0 auto}
+.dn-c .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.dn-c .ctr .n{font-size:22px;font-weight:800;letter-spacing:-.03em}
+.dn-c .ctr .l{font-size:10px;color:var(--tx3);font-weight:600;margin-top:2px}
+.lg-h,.lg-r{display:grid;grid-template-columns:1fr 52px 58px 68px;gap:8px;align-items:center}
+.lg-h{font-size:9.5px;color:var(--tx3);font-weight:700;text-transform:uppercase;padding:12px 0 8px;border-bottom:1px solid var(--line)}
+.lg-h span:not(:first-child){text-align:right}
+.lg-r{padding:9px 0;border-bottom:1px solid var(--line2);font-size:12.5px}
+.lg-r:last-child{border-bottom:none}
+.lg-r .nm2{display:flex;align-items:center;gap:7px;font-weight:650;color:var(--tx);min-width:0}
+.lg-r .sw{width:9px;height:9px;border-radius:3px;flex:0 0 9px}
+.lg-r .num{text-align:right;color:var(--tx2);font-weight:600}
+.lg-r .eff{text-align:right;font-weight:800;font-size:11.5px}
+.eff-g{color:var(--green)}.eff-n{color:var(--tx3)}.eff-r{color:var(--red)}
+
+.ctype{font-size:10px;font-weight:700;color:var(--tx2);background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:2px 7px;margin-left:7px;vertical-align:2px}
+.hero{display:flex;align-items:center;gap:13px;background:linear-gradient(90deg,#fffdf4,#fff 70%);border:1px solid #f2e4b8;border-radius:12px;padding:12px 15px;margin-bottom:12px}
+.hero-l{font-size:11px;font-weight:800;color:#b7791f;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.hero-c{display:flex;flex-direction:column;gap:2px;min-width:0}
+.hero-c b{font-size:13px;font-weight:800}
+.hero-c span{font-size:11.5px;color:var(--tx2);line-height:1.4}
+.flow{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:11px 15px;margin-bottom:14px}
+.flow-l{font-size:11px;font-weight:700;color:var(--tx2);margin-bottom:8px}
+.flow-b{display:flex;align-items:center;gap:3px;flex-wrap:wrap;font-size:12px;color:var(--tx2)}
+.flow .fl{font-weight:600;white-space:nowrap}
+.flow .fl b{color:var(--tx);font-weight:800}
+.flow .fl.lo b{color:var(--red)}
+.flow .ar{color:var(--tx3);margin:0 3px}
+.hide{display:none !important}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1440px){.kpis{grid-template-columns:repeat(5,1fr)}.ckpi{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:1200px){.sumb,.g2{grid-template-columns:1fr}.sigs,.g3{grid-template-columns:1fr}.goals{grid-template-columns:repeat(2,1fr)}.act{grid-template-columns:1fr;gap:12px}.mgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1024px){
+ .layout{grid-template-columns:1fr}
+ .sidebar{position:sticky;top:0;height:auto;flex-direction:row;align-items:center;gap:10px;border-right:none;border-bottom:1px solid var(--line);padding:12px 18px;overflow-x:auto}
+ .brandbox{padding:0;border:none}.navlabel{display:none}.sidefoot{display:none}
+ #tabs{flex-direction:row;gap:6px}
+ .content{padding:20px 18px 70px}
+}
+@media(max-width:768px){.kpis{grid-template-columns:repeat(2,1fr)}.ckpi{grid-template-columns:repeat(2,1fr)}.goals{grid-template-columns:1fr}.topbar{padding:12px 18px}.chip.goal{display:none}}
+
+/* ============================================================
+   GLOBAL DESIGN SYSTEM — 프로젝트 공통 규칙 (override)
+   spacing 8/12/16/24/32 · radius 16 · border #E8EAF0 · pastel
+============================================================ */
+/* Layout: 넓힌 콘텐츠 폭 + 좌우 균형 (좌측 치우침 방지) */
+.content{max-width:1680px;padding:24px 32px 96px;margin:0 auto}
+section{margin-bottom:24px}
+.g2,.g3,.kpis,.sigs,.topcards,.goals,.mcards{gap:16px}
+
+/* Card System: 모든 카드 동일 radius / border / shadow / bg */
+.card,.kpi,.tc,.ic,.nwc,.bwc,.sig,.cmp,.sb,.mc,.act,.goal-t{
+  background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);min-width:0}
+.card,.ic,.nwc,.bwc{padding:24px}
+.kpi,.tc,.sb-b{padding:20px}
+.mc,.goal-t,.ck{padding:16px}
+.cum,.spark,.flow,.hero{border-radius:12px}
+
+/* KPI System: 높이·정렬·잘림 통일 */
+.kpi{min-height:118px;display:flex;flex-direction:column}
+.kpi .goal{margin-top:auto}
+.kpi .v,.tc .tv,.sig .bigm .v,.mc .mv{white-space:nowrap;letter-spacing:-.03em}
+.kpi .v{font-size:clamp(18px,1.5vw,24px)}
+.tc .tv{font-size:clamp(18px,1.55vw,25px)}
+.ck .v{font-size:clamp(14px,1.1vw,17px)}
+.sig .bigm .v{font-size:clamp(17px,1.4vw,22px)}
+
+/* Typography 계층 */
+.tbtitle{font-size:var(--fz-page);font-weight:700}
+h2{font-size:var(--fz-sec);font-weight:700}
+.ctitle,.sb-h,.ih,.cname{font-size:var(--fz-card);font-weight:700}
+
+/* Toolbar System: 높이·radius·padding·아이콘 통일 */
+.topbar-right{gap:8px}
+.chip,.searchbox,.iconbtn,.profile{height:34px;display:flex;align-items:center}
+.chip{border-radius:10px;padding:0 12px;gap:5px}
+.searchbox{border-radius:10px;padding:0 12px;width:200px}
+.iconbtn{width:34px;border-radius:10px;padding:0}
+.topbar-right svg{width:16px;height:16px;stroke-width:2}
+.profile{border-radius:20px;padding:0 12px 0 4px}
+
+/* Button System: Primary / Secondary / Outline / Ghost / Danger */
+.btn{height:34px;display:inline-flex;align-items:center;gap:6px;padding:0 14px;border-radius:10px;
+  font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid transparent;
+  transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{box-shadow:0 4px 12px rgba(110,106,239,.28)}
+.btn-secondary{background:var(--soft);color:var(--tx);border-color:var(--line)}
+.btn-outline{background:#fff;color:var(--tx2);border-color:var(--line)}
+.btn-ghost{background:none;color:var(--tx2)}
+.btn-danger{background:var(--rbg);color:var(--red);border-color:var(--rbd)}
+.dtog button{height:auto;min-height:34px;border-radius:10px;padding:9px 18px;transition:transform .2s ease,box-shadow .2s ease}
+
+/* Icon System: 16 / 18 / 20 만 사용, stroke 통일 */
+.sidebar svg,.tab svg{width:18px;height:18px;stroke-width:2}
+
+/* Color System: 상태색 파스텔 (신호등·판정) */
+.sig.win .vd{color:var(--green)}.sig.mid .vd{color:var(--blue)}.sig.bad .vd{color:var(--red)}
+.b-stable{background:var(--bbg);color:#0284C7;border-color:var(--bbd)}
+.badge{border-radius:8px}
+.tc.hero{background:var(--primary);border-color:var(--primary);display:block;text-align:left}
+.tc.hero .tl{color:rgba(255,255,255,.85);white-space:nowrap}
+.tc.hero .tv{color:#fff}
+.tc.hero .tv small{color:rgba(255,255,255,.85)}
+.tc.hero .ts{color:#fff;margin-top:10px}
+.tc.hero .tbadge{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;background:rgba(255,255,255,.20);color:#fff;font-weight:700;font-size:10.5px;padding:3px 9px;border-radius:20px}
+
+/* Hover & Motion: 그림자만 약하게 + translateY(-2px) 0.2s */
+.card,.kpi,.tc,.ic,.bwc,.sig,.goal-t,.mc,.act{transition:transform .2s ease,box-shadow .2s ease}
+.card:hover,.kpi:hover,.tc:hover,.ic:hover,.bwc:hover,.sig:hover,.goal-t:hover,.mc:hover,.act:hover{
+  transform:translateY(-2px);box-shadow:var(--sh2)}
+.cmp:hover{box-shadow:var(--sh)}
+
+/* 반응형 그리드 정렬 유지 */
+@media(max-width:1440px){.topcards{grid-template-columns:1fr 1fr 1fr}.kpis{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:1100px){.topcards{grid-template-columns:1fr 1fr}}
+@media(max-width:1200px){.acards{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brandbox"><div class="logo">M</div><div class="bname">Meta Ads<span>COOL LAB</span></div></div>
+    <div class="navlabel">Dashboard</div>
+    <nav class="in" id="tabs"></nav>
+    <div class="sidefoot"><b>매주 화요일 10:00</b><br>최신 데이터로 자동 갱신</div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <div class="tbtitle">Meta Ads Dashboard<span>주간 성과 리포트 · 한눈에 보는 운영 현황</span></div>
+      <div class="topbar-right">
+        <div class="searchbox"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><input id="q" type="text" placeholder="검색" autocomplete="off"><span id="qn" class="qn"></span></div>
+        <div class="chip">분석 <b id="p1">07.07 – 07.13</b></div>
+        <div class="chip">비교 <b id="p2">06.30 – 07.06</b></div>
+        <div class="chip goal">목표 <b>CPA 22,000 · ROAS 261%</b></div>
+        <div class="chip">데이터 <b id="upd">2026-07-13</b></div>
+        <button class="iconbtn" title="새로고침" onclick="location.reload()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg></button>
+        <div class="profile"><div class="av">CL</div><div class="pn">COOL LAB</div></div>
+      </div>
+    </header>
+    <main class="content" id="app"></main>
+  </div>
+</div>
+
+<script>
+/* ============ DATA (매주 화요일 스케줄이 갱신) ============ */
+const META={period:'2026.07.07 – 07.13',prev:'2026.06.30 – 07.06',dataEnd:'2026-07-13',rangeAll:'2026-04-08 ~ 2026-07-13',days:96,goalCPA:22000,goalROAS:261};
+
+const TOTAL={spend:3966998,pspend:3822909,pur:153,ppur:105,rev:8786060,prev_:6054820,cpa:25928,pcpa:36409,roas:221.5,proas:158.4,ctr:2.05,pctr:1.39,cpc:1401,pcpc:1748,cpm:28708,pcpm:24349,imp:138185,pimp:157002,clk:2831,pclk:2187,atc:264,patc:157,aov:57425};
+
+const LIFE={spend:34784222,pur:1292,rev:74170245,cpa:26923,roas:213.2,salesSpend:33787865,salesRev:74042045,salesCPA:26152,salesROAS:219.1,aov:57407};
+
+const LIFEROWS=[
+ ['260422_ASC_판매_쿨리','판매(ASC)','04.22 – 07.13','82일',16507608,'47.5%',688,40216830,'23,994원','243.6%','2.07%','955원','<span class="badge b-scale">● 최우수</span>',0],
+ ['260430_ASC_판매_쿨리_신규소재 test','판매(ASC)','04.30 – 07.13','74일',12851155,'36.9%',482,27881280,'26,662원','217.0%','1.89%','1,534원','<span class="badge b-stable">● 양호</span>',0],
+ ['260408_ASC_판매_치카프렌즈 런칭','판매(ASC)','04.08 – 07.13','96일',3923995,'11.3%',113,5598335,'34,726원','142.7%','2.11%','1,442원','<span class="badge b-off">● 미달</span>',0],
+ ['260415_ASC_판매_치카프렌즈 신규소재 TEST','판매(ASC)','04.15 – 04.27','13일',505107,'1.5%',9,345600,'56,123원','68.4%','1.24%','3,557원','<span class="badge">종료</span>',1],
+ ['260525_네이버_써머가전바캉스페어','트래픽','05.25 – 05.31','7일',418074,'1.2%',0,89800,'—','21.5%','4.31%','99원','<span class="badge">종료</span>',1],
+ ['260408_트래픽_치카프렌즈 런칭','트래픽','04.08 – 04.15','8일',338456,'1.0%',0,38400,'—','11.3%','3.04%','226원','<span class="badge">종료</span>',1],
+ ['260428_트래픽_쿨리 네이버 스마트스토어','트래픽','04.28 – 05.04','7일',140093,'0.4%',0,0,'—','0.0%','4.30%','96원','<span class="badge">종료</span>',1],
+ ['260430_게시물참여_쿨리_체험단모집','참여','05.01 – 05.06','6일',49877,'0.1%',0,0,'—','0.0%','5.45%','145원','<span class="badge">종료</span>',1],
+ ['260430_게시물참여_쿨리_신제품 퀴즈','참여','04.30 – 05.07','8일',49857,'0.1%',0,0,'—','0.0%','8.48%','239원','<span class="badge">종료</span>',1]];
+
+const CAMPS=[
+{id:'c1',key:'260422',type:'구매 캠페인',hero:{n:'11.영상h - 사본',copy:'와… 저 이거 쓰고 손풍기 바로 버렸어요, 여름 다가오는 지금 이거 꼭 준비하세요'},name:'260422_ASC_판매_쿨리',short:'260422 쿨리',color:'#06A6FF',cls:'c1',
+ badge:'<span class="badge b-scale">● Scale</span><span class="badge b-stable">ROAS 목표 초과</span>',
+ meta:'지출 비중 55.4% · 활성 소재 6개 · 운영 82일차',
+ wk:{spend:2199708,pur:94,rev:5835955,cpa:23401,roas:265.3,ctr:1.9,cpc:1150,dcpa:-40.8,droas:115.8,dpur:74.1,dspend:3.1,drev:83.0,dctr:0.7,dcpc:-18.8,cpaSt:'●',roasSt:'●'},
+ cum:{period:'04.22 – 07.13 · 82일',spend:'16,507,608원',pur:'688건',rev:'40,216,830원',cpa:'23,994원',roas:'243.6%',cpaC:'pos',roasC:'pos'},
+ sum:[['g','결론','<b>유일하게 ROAS 목표(261%)를 초과 달성한 캠페인.</b> CPA도 23,401원으로 목표에 6.4% 차이까지 접근.'],
+      ['b','근거','지출 +3.1%만 늘렸는데 구매 54 → <b>94건(+74.1%)</b>, 전환값 +83.0%. CTR 1.2→1.9%로 오르며 CPC가 1,415→1,150원(-18.8%)으로 하락한 것이 CPA 개선의 직접 원인.'],
+      ['','액션','<b>예산 확대.</b> 14.영상o(OFF) 예산을 21.영상s·5.영상e로 이동해 <b>소재 분산과 함께 증액</b>.']],
+ creatives:[
+  ['11.영상h - 사본','49일',860731,122962,'● 과도',41,20993,288.9,3.3,'40,298원','▲ 개선','scale','CPA·ROAS 동시 달성 · 최대 기여',0],
+  ['21.영상s - 사본','28일',193057,27580,'● 부족',14,13790,470.6,2.4,'39,522원','▲ 개선','scale','캠페인 내 ROAS 1위 · 즉시 증액',0],
+  ['5.영상e','53일',19265,2752,'● 부족',1,19265,440.7,1.6,'11,099원','— 소액','scale','검증된 소재 · 증액 대상',0],
+  ['22.영상t - 사본','21일',973165,139024,'● 과도',36,27032,228.8,1.4,'46,994원','▲ 개선','stable','CPA 28,000원 미만 · 유지',0],
+  ['10.영상b - 사본','33일',23534,3362,'● 부족',1,23534,190.8,1.0,'28,267원','— 소액','watch','지출 미미 · 관찰',0],
+  ['14.영상o - 사본','37일',129956,18565,'● 부족',1,129956,65.3,2.0,'53,303원','▼ 악화','off','Rule 5 · CPA 목표 5.9배',0]],
+ cfoot:['2,199,708원','94','23,401원','265.3%','1.9%','39,499원'],
+ ctags:'<span class="badge b-scale">Scale 3</span><span class="badge b-stable">Stable 1</span><span class="badge b-watch">Watch 1</span><span class="badge b-off">OFF 1</span>',
+ csum:[['g','결론','6개 중 <b>3개가 Scale 등급</b>. 이번 주 최고 성과 캠페인이며 소재 라인업이 가장 건강한 편.'],
+       ['b','근거','11.영상h(41구매)·22.영상t(36구매)가 구매의 82%를 담당. 다만 <b>일평균 지출이 12만~14만원으로 권장 상한(6만원)의 2배 이상</b>이라 쏠림 리스크가 크다. 14.영상o는 지난주 53,303원 → 129,956원으로 크게 떨어짐.'],
+       ['r','액션','14.영상o OFF(129,956원 회수) → 21.영상s(일 27,580 → 50,000원)·5.영상e(일 2,752 → 40,000원) 증액으로 <b>소재 분산</b>.']],
+ donut:{total:94,items:[
+   {n:'11.영상h - 사본',p:41,sp:39.1,c:'#06A6FF'},{n:'22.영상t - 사본',p:36,sp:44.2,c:'#5AB0F0'},
+   {n:'21.영상s - 사본',p:14,sp:8.8,c:'#0B62D6'},{n:'5.영상e',p:1,sp:0.9,c:'#BFE4FF'},
+   {n:'10.영상b - 사본',p:1,sp:1.1,c:'#cbd5e1'},{n:'14.영상o - 사본',p:1,sp:5.9,c:'#0B4C99'}]},
+ best:{kind:'best',n:'11.영상h - 사본',s:'운영 49일 · 신뢰도 최상 · 누적 413구매',
+   m:[['지출','860,731원',''],['구매','41건',''],['CPA','20,993원','pos'],['ROAS','288.9%','pos'],['CTR','3.3%','pos']],
+   r:[['결론','<b>CPA·ROAS 두 목표를 모두 달성한 캠페인 최대 기여 소재.</b> 캠페인 구매의 43.6%를 담당.'],
+      ['근거','CPA 40,298 → <b>20,993원(-47.9%)</b>, ROAS 150.1 → <b>288.9%</b>, 구매 26 → 41건. CTR 3.3%로 캠페인 평균(1.9%)의 1.7배.'],
+      ['액션','현 예산 유지. 단 일평균 122,962원(상한의 2배)으로 <b>의존도가 위험 수준</b> → 대체 소재를 지금부터 준비.']]},
+ worst:{kind:'worst',n:'14.영상o - 사본',s:'운영 37일 · 신뢰도 높음',
+   m:[['지출','129,956원',''],['구매','1건',''],['CPA','129,956원','neg'],['ROAS','65.3%','neg'],['CTR','2.0%','']],
+   r:[['결론','<b>즉시 OFF (Rule 5).</b> CPA가 목표의 <b>5.9배</b>, OFF 기준(33,000원)의 3.9배이며 2주 연속 악화.'],
+      ['근거','CPA 53,303 → <b>129,956원(+143.8%)</b>, 구매 4 → 1건. CTR 2.0%로 유입은 되는데 구매로 이어지지 않음 — <b>소재-랜딩 메시지 불일치 가능성</b> <span class="est">추정</span>'],
+      ['액션','<b>즉시 OFF</b> → 회수 129,956원을 21.영상s(ROAS 470.6%)로 이동.']]},
+ trend:[173,132,167,140,118,112,217,387,179,197,247,298,266,271]},
+
+{id:'c2',key:'260430',type:'신규 TEST 캠페인',hero:{n:'29.영상29',copy:'신규 발굴 Hero · \'여자들이 앞으로 쓰는 이유\' (35–54 여성·가슴땀 공감 포인트)'},name:'260430_ASC_판매_쿨리_신규소재 test',short:'260430 신규소재test',color:'#2F6FE0',cls:'c2',
+ badge:'<span class="badge b-stable">● Stable</span><span class="badge b-opt">소재 소재 간 편차</span>',
+ meta:'지출 비중 37.1% · 활성 소재 7개 · 운영 74일차',
+ wk:{spend:1472177,pur:55,rev:2800005,cpa:26767,roas:190.2,ctr:2.6,cpc:1845,dcpa:-22.2,droas:23.5,dpur:34.1,dspend:4.4,drev:19.1,dctr:0.4,dcpc:-30.5,cpaSt:'●',roasSt:'●'},
+ cum:{period:'04.30 – 07.13 · 74일',spend:'12,851,155원',pur:'482건',rev:'27,881,280원',cpa:'26,662원',roas:'217.0%',cpaC:'',roasC:''},
+ sum:[['b','결론','<b>개선 중이나 소재 간 편차로 성과 손실.</b> ROAS 190.2%로 목표 미달.'],
+      ['','근거','29.영상29(CPA 19,359원 / ROAS 260.2%)와 28.영상z(60,725원 / 89.1%)가 공존. <b>28.영상z 하나가 캠페인 지출의 33.0%를 쓰고 구매는 14.5%</b>만 만든다.'],
+      ['r','액션','<b>28.영상z 즉시 OFF.</b> 제외 시 캠페인 CPA <b>19,996원</b> / ROAS <b>241.2%</b>로 개선. <span class="est">단순 계산</span>']],
+ creatives:[
+  ['29.영상29','15일',909856,129979,'● 과도',47,19359,260.2,3.5,'28,326원','▲ 개선','scale','CPA 달성 · ROAS 목표 도달',0],
+  ['28.영상z','18일',485802,69400,'● 과도',8,60725,89.1,1.6,'55,058원','▼ 악화','off','Rule 5 · CPA 33,000원 초과 지속',0],
+  ['32.영상h2(비밀링크)','7일',70403,10058,'● 부족',0,null,0,1.9,'—','▼ 구매 0','off','Rule 3 · 7일 70,403원, 구매 0',0],
+  ['31.영상31','9일',5611,1403,'● 부족',0,null,0,3.9,'33,895원','▼ 노출 중단','off','Rule 2 · 노출 끊김',1],
+  ['25.영상w','13일',332,332,'● 부족',0,null,0,0,'—','▼ 노출 중단','off','Rule 2 · 노출 끊김',1],
+  ['26.영상x','13일',20,20,'● 부족',0,null,0,0,'—','▼ 노출 중단','off','Rule 2 · 노출 끊김',1],
+  ['30.영상30','7일',153,153,'● 부족',0,null,0,0,'—','▼ 노출 중단','off','Rule 2 · 노출 끊김',1]],
+ cfoot:['1,472,177원','55','26,767원','190.2%','2.6%','34,388원'],
+ ctags:'<span class="badge b-scale">Scale 1</span><span class="badge b-off">OFF 6</span>',
+ csum:[['r','결론','<b>7개 중 성공은 29.영상29 단 1개(성공률 14%).</b> 나머지 6개는 전부 OFF 대상.'],
+       ['b','근거','29.영상29 혼자 캠페인 구매의 <b>85.5%</b>(47/55)를 만든다. 28.영상z는 지출 33.0%를 쓰고 구매는 14.5%(8건)뿐이며 지난주 55,058 → 60,725원으로 <b>2주 연속 악화</b>. 30·31·32·25·26번은 합산 76,519원에 구매 0건.'],
+       ['r','액션','6개 전부 OFF(562,321원 회수) → 29.영상29 파생 소재 2종 투입해 <b>단일 소재 의존도(85.5%) 낮추기</b>.']],
+ donut:{total:55,items:[
+   {n:'29.영상29',p:47,sp:61.8,c:'#2F6FE0'},{n:'28.영상z',p:8,sp:33.0,c:'#0B4C99'},
+   {n:'32.영상h2(비밀링크)',p:0,sp:4.8,c:'#7FA8D6'},{n:'기타 4개 (배분중단)',p:0,sp:0.4,c:'#e5e7eb'}]},
+ best:{kind:'best',n:'29.영상29',s:'운영 15일 · 신뢰도 높음 · 전체 소재 중 구매 1위',
+   m:[['지출','909,856원',''],['구매','47건',''],['CPA','19,359원','pos'],['ROAS','260.2%','pos'],['CTR','3.5%','pos']],
+   r:[['결론','<b>목표 CPA 달성 + ROAS 목표(261%)에 사실상 도달.</b> 캠페인 구매의 <b>85.5%</b>, 전체 구매의 30.7%를 홀로 담당.'],
+      ['근거','CPA 28,326 → <b>19,359원(-31.7%)</b>, ROAS 169.5 → <b>260.2%(+90.7%p)</b>, 구매 32 → 47건. CTR 3.5%는 전체 평균(2.05%)의 1.7배로 <b>첫 3초 집중력이 검증</b>됐다.'],
+      ['액션','예산 유지 + <b>파생 변형 2종 테스트</b>(첫 3초 구성 유지, 오프닝·CTA만 변경). 일 129,979원으로 이미 상한의 2배 → 추가 증액은 CPA 상승 위험.']]},
+ worst:{kind:'worst',n:'28.영상z',s:'운영 18일 · 신뢰도 높음 · 전체 소재 중 최대 낭비',
+   m:[['지출','485,802원',''],['구매','8건',''],['CPA','60,725원','neg'],['ROAS','89.1%','neg'],['CPC','2,198원','neg']],
+   r:[['결론','<b>즉시 OFF (Rule 5).</b> CPA 목표의 <b>2.8배</b>, 2주 연속 악화. <b>단일 소재 기준 최대 낭비</b>(주 48.6만원).'],
+      ['근거','CPA 55,058 → <b>60,725원</b>. 지출은 +26.1% 늘렸는데 ROAS는 190.4 → <b>89.1%</b>로 반토막. 29.영상29 대비 <b>CPA 3.1배 · CTR 절반(1.6% vs 3.5%)</b> — 첫 3초 집중력 자체가 열위.'],
+      ['액션','<b>즉시 OFF.</b> 제외 시 캠페인 CPA 19,996원 / ROAS 241.2%로 개선 <span class="est">단순 계산</span>. 회수액은 21.영상s와 신규 테스트로 이동.']]},
+ trend:[217,225,101,40,243,131,207,156,0,112,110,282,306,306]},
+
+{id:'c3',key:'260408',type:'런칭 캠페인',hero:{n:'10.맘카페',copy:'과거 주력 Hero — 현재 효율 무너짐, 대체 소재 발굴 필요'},name:'260408_ASC_판매_치카프렌즈 런칭',short:'260408 치카프렌즈',color:'#0B4C99',cls:'c3',
+ badge:'<span class="badge b-off">● OFF / 재검토</span>',
+ meta:'지출 비중 7.4% · 활성 소재 6개 · 운영 96일차',
+ wk:{spend:295113,pur:4,rev:150100,cpa:73778,roas:50.9,ctr:1.7,cpc:2459,dcpa:163.5,droas:-133.0,dpur:-60.0,dspend:5.4,drev:-70.9,dctr:-0.3,dcpc:30.9,cpaSt:'●',roasSt:'●'},
+ cum:{period:'04.08 – 07.13 · 96일',spend:'3,923,995원',pur:'113건',rev:'5,598,335원',cpa:'34,726원',roas:'142.7%',cpaC:'neg',roasC:'neg'},
+ sum:[['r','결론','<b>캠페인 전체 무너짐.</b> ROAS 50.9% — 광고비 절반도 회수 못 함. 목표 CPA의 <b>3.4배</b>.'],
+      ['','근거','지출 +5.4% 늘렸는데 구매 10 → <b>4건</b>, 전환값 -70.9%. CTR도 2.0 → 1.7%로 하락하고 CPC는 +30.9% 상승 — <b>클릭 단계부터 무너짐.</b>'],
+      ['r','액션','<b>10.맘카페 즉시 OFF</b> → 남는 소재는 18.맘카페2 1개뿐. <b>캠페인 중지 또는 소재 전면 교체를 이번 주 안에 결정.</b>']],
+ creatives:[
+  ['18.맘카페2_비밀링크','6일',36539,6090,'● 부족',1,36539,95.5,1.1,'신규','—','watch','Rule 4 · 6일차, 1주 추가 관찰',0],
+  ['10.맘카페','61일',254922,36417,'● 적정',3,84974,45.2,1.8,'27,181원','▼ 악화','off','Rule 5 · CPA 3.1배 악화',0],
+  ['6. 혜택 강조 이미지 캐러셀','52일',661,165,'● 부족',0,null,0,7.7,'—','▼ 노출 중단','off','Rule 2 · 노출 끊김',1],
+  ['14.단일이미지4','24일',2305,461,'● 부족',0,null,0,1.9,'—','▼ 노출 중단','off','Rule 2 · 노출 끊김',1],
+  ['16.충치25','9일',600,200,'● 부족',0,null,0,0,'—','▼ 노출 중단','off','Rule 2 · 노출 끊김',1],
+  ['13.단일이미지3','21일',86,29,'● 부족',0,null,0,0,'—','▼ 노출 중단','off','Rule 2 · 노출 끊김',1]],
+ cfoot:['295,113원','4','73,778원','50.9%','1.7%','28,004원'],
+ ctags:'<span class="badge b-watch">Watch 1</span><span class="badge b-off">OFF 5</span>',
+ csum:[['r','결론','<b>목표를 달성한 소재가 단 하나도 없다.</b> 6개 중 4개는 이미 노출 배분이 끊겼고, 남은 2개도 ROAS 100% 미만.'],
+       ['b','근거','실제 지출의 <b>86.4%</b>가 10.맘카페(61일 운영)에 집중돼 있는데 CPA가 지난주 27,181원 → <b>84,974원(3.1배)</b>으로 악화. 소재 노후로 효과 급감.'],
+       ['r','액션','10.맘카페 OFF → 남는 소재는 18.맘카페2(6일차) 1개뿐. <b>캠페인 중지 또는 신규 소재 3~4개 전면 투입</b> 중 택일.']],
+ donut:{total:4,items:[
+   {n:'10.맘카페',p:3,sp:86.4,c:'#0B4C99'},{n:'18.맘카페2_비밀링크',p:1,sp:12.4,c:'#3E92E0'},
+   {n:'기타 4개 (배분중단)',p:0,sp:1.2,c:'#e5e7eb'}]},
+ best:{kind:'na',n:'18.맘카페2_비밀링크',s:'운영 6일 · ○ 아직 판단 이른 때 · 목표 미달',
+   m:[['지출','36,539원',''],['구매','1건',''],['CPA','36,539원','neg'],['ROAS','95.5%','neg'],['CPC','4,060원','neg']],
+   r:[['결론','<b>이 캠페인에서 유일하게 구매를 만든 소재이지만, 목표 달성 소재는 아니다.</b> ROAS 95.5%로 광고비조차 회수 못 함.'],
+      ['근거','운영 6일 · 누적 36,539원으로 <b>판단 가능 기간(7일 이상)에 미달</b>. CPC 4,060원은 전체 평균(1,401원)의 2.9배.'],
+      ['액션','<b>Rule 4 — 1주 추가 관찰.</b> 다음 주에도 CPA 33,000원 초과 시 OFF. 캠페인 중지 시 쿨리 캠페인으로 이동해 재검증.']]},
+ worst:{kind:'worst',n:'10.맘카페',s:'운영 61일 · 신뢰도 최상 · 캠페인 지출의 86%',
+   m:[['지출','254,922원',''],['구매','3건',''],['CPA','84,974원','neg'],['ROAS','45.2%','neg'],['CTR','1.8%','']],
+   r:[['결론','<b>즉시 OFF (Rule 5).</b> CPA가 목표의 <b>3.9배</b>. 61일 운영 끝에 <b>소재 노후로 효과 급감.</b>'],
+      ['근거','CPA 27,181 → <b>84,974원(3.1배)</b>, ROAS 189.4 → <b>45.2%</b>, 구매 10 → 3건. 누적으로는 70구매·353만원을 만든 과거 주력 소재였으나 최근 2주 크게 떨어짐.'],
+      ['액션','<b>즉시 OFF.</b> 이 소재가 캠페인 실제 지출의 86.4%라 OFF하면 캠페인이 사실상 비게 된다 → <b>캠페인 중지 여부를 함께 결정</b>.']]},
+ trend:[0,592,273,100,94,92,103,0,164,0,98,0,76,0]}
+];
+
+const BRANDS=[
+ {id:'b1',name:'쿨리',color:'#06A6FF',camps:['c1','c2'],split:'구매 캠페인 60% · 신규 TEST 40% (지출 기준)',
+  kpi:[['지출','3,671,885','원','▲3.6%','mut'],['구매','149','건','▲56.8%','up'],['구매 전환값','8,635,960','원','▲55.9%','up'],['구매당 비용','24,644','원','▼33.9%','up'],['구매 ROAS','235.2','%','▲78.8%p','up']],
+  cum:{spend:'29,358,763원',pur:'1,170건',rev:'68,098,110원',cpa:'25,093원',roas:'231.9%'},
+  verdict:[['g','결론','<b>구매·신규 TEST 두 캠페인 모두 개선.</b> 브랜드 ROAS 156% → <b>235%</b>, 구매 95 → 149건(+57%). 구매 캠페인이 안정적 주력이고 신규 TEST는 29.영상29가 이끔.'],
+   ['b','근거','구매 캠페인 ROAS 265%(목표 초과) · 신규 TEST 190%(개선 중이나 28.영상z 등 부진 소재가 발목). 누적 ROAS도 232%로 계정 전체를 받쳐주는 축.'],
+   ['r','방향','<b>이슈 최소화 후 다음 주 관찰.</b> 성과 미달 소재만 OFF, 예산 확대·신규 Hero 이동은 안정적 흐름을 되찾을 때까지 보류.']]},
+ {id:'b2',name:'치카프렌즈',color:'#0B4C99',camps:['c3'],split:'런칭 캠페인 100%',
+  kpi:[['지출','295,113','원','▲5.4%','mut'],['구매','4','건','▼60.0%','down'],['구매 전환값','150,100','원','▼70.9%','down'],['구매당 비용','73,778','원','▲163.5%','down'],['구매 ROAS','50.9','%','▼133.0%p','down']],
+  cum:{spend:'3,923,995원',pur:'113건',rev:'5,598,335원',cpa:'34,726원',roas:'142.7%'},
+  verdict:[['r','결론','<b>브랜드 전체가 목표 크게 미달.</b> 주간 ROAS 50.9%, 누적도 142.7%로 광고비 회수 실패.'],
+   ['b','근거','실제 지출의 86%가 10.맘카페(과거 Hero)에 집중됐으나 CPA가 3.1배 악화. 남은 소재 대부분 노출 중단 상태.'],
+   ['r','방향','10.맘카페 OFF 후 <b>캠페인 중지 또는 신규 소재 전면 교체</b>를 이번 주 안에 결정.']]}
+];
+
+const DAYS=['06/30','07/01','07/02','07/03','07/04','07/05','07/06','07/07','07/08','07/09','07/10','07/11','07/12','07/13'];
+const TREND={roas:[177.5,195.1,151.4,101.7,159.9,117.5,204.9,273.0,111.0,153.7,186.5,269.0,266.8,263.6],
+ cpa:[32377,42366,32890,46064,30637,46528,30073,21074,53362,36023,31124,22934,22266,19655],
+ spend:[518026,635486,526232,552764,520826,558332,511243,568985,533624,504315,529113,573340,667983,589638],
+ pur:[16,15,16,12,17,12,17,27,10,14,17,25,30,30],
+ ctr:[1.2,1.2,1.7,1.0,1.6,1.9,1.6,2.1,1.6,1.4,2.0,2.3,2.2,2.7]};
+
+const AUDIENCE={age:[
+ ['55-64 ★',763125,40,'19,078원','325.0%','153.9%','3.6%','scale','pos','pos','pos'],
+ ['25-34',573922,22,'26,087원','223.9%','154.4%','1.4%','stable','','',''],
+ ['35-44',1060692,38,'27,913원','200.9%','125.9%','1.9%','stable','','',''],
+ ['45-54',1354513,48,'28,219원','195.0%','205.8%','2.5%','watch','','',''],
+ ['65+',132382,5,'26,476원','188.5%','104.4%','4.3%','stable','','','pos'],
+ ['18-24',82253,0,'—','0.0%','63.6%','0.9%','off','neg','neg','neg']],
+ seg:[['여성 (전체)',2515744,103,'24,425원','230.3%','178.0%','',''],
+ ['남성 (전체)',1441423,50,'28,829원','207.6%','124.0%','','neg'],
+ ['SEP','TOP 세그먼트 (연령 × 성별)'],
+ ['55-64 여성 ★',532262,33,'16,129원','376.0%','—','pos','pos'],
+ ['25-34 남성 ★',290487,14,'20,749원','312.1%','—','pos','pos'],
+ ['65+ 여성',77498,4,'19,375원','264.0%','—','pos','pos'],
+ ['35-44 남성',428899,16,'26,806원','222.3%','—','',''],
+ ['45-54 여성',956185,36,'26,561원','212.5%','—','',''],
+ ['45-54 남성 ▼',394778,12,'32,898원','154.2%','—','neg','neg'],
+ ['25-34 여성 ▼',282106,8,'35,263원','134.2%','—','neg','neg']]};
+
+const AGEGENDER=[['18-24',0,0],['25-34',14,8],['35-44',16,22],['45-54',12,36],['55-64',7,33],['65+',1,4]];
+const INSIGHTS=[
+ ['영상만 살아남는다','지출 상위 7개 소재가 <b>전부 영상</b>. 이미지·캐러셀 4개(모두 <b>치카프렌즈</b>)의 7일 합산 지출은 <b>3,652원, 구매 0건</b>. 알고리즘이 노출 배분을 사실상 중단했다.','▶ 이미지 단일 소재 제작 중단, 영상에 리소스 집중'],
+ ['CTR이 성패를 가른다','성공 소재는 <b>CTR 3%대</b>(29.영상29 3.5% / 11.영상h 3.3%), 실패 소재는 <b>1%대</b>(28.영상z 1.6% / 10.맘카페 1.8%). 전체 CTR이 1.39 → 2.05%로 오르며 CPC가 19.8% 떨어진 것이 CPA 개선의 <b>1차 동인</b>.','▶ 신규 소재 7일 중단 기준 1차 지표로 CTR 2.0% 사용'],
+ ['\'비밀링크\' 가설 실패','비밀링크 소재 2개 모두 미달. <b>32.영상h2</b>는 7일 70,403원에 <b>구매 0건</b>, <b>18.맘카페2</b>는 6일 36,539원에 1건(CPC 4,060원 = 평균의 2.9배).','▶ 32번 즉시 OFF · 18번은 Rule 4로 1주 추가 관찰'],
+ ['신규 소재 성공률 20%','신규 번호대 5개(26·29·30·31·32) 중 <b>성공은 29.영상29 1개</b>. 나머지 4개는 합산 76,187원에 구매 0건. 다만 성공한 1개가 주간 구매의 <b>30.7%</b>를 만들어 <b>테스트 ROI는 명백히 플러스</b>.','▶ 주당 3~4개 투입 유지 + 7일 중단 기준 엄격 적용'],
+ ['장수 소재의 두 갈래','<b>11.영상h(49일)</b>는 CPA 20,993원 / ROAS 288.9%로 건재한 반면, <b>10.맘카페(61일)</b>·<b>14.영상o(37일)</b>는 무너졌다. 운영 기간보다 <b>소재의 CTR 유지력</b>이 수명을 결정한다. <span class="est">추정</span>','▶ 40일 이상 소재는 주 단위 CTR 감시'],
+ ['퍼널 경고: ATC→구매 하락','장바구니 157 → 264건(<b>+68.2%</b>)인데 구매는 105 → 153건(+45.7%). <b>ATC→구매 전환율 66.9% → 58.0%(-8.9%p)</b>. 광고 밖(랜딩·가격·재고·결제) 요인 가능성. <span class="est">추정</span>','▶ 랜딩/결제 이탈 지점 점검 + 장바구니 리타겟팅']];
+
+const ACTIONS=[
+ ['p1','P1 · 즉시','소재 OFF','<span class="badge b-off">12개</span>',
+  '<b><span class="cg cg1">260422 쿨리</span></b> 14.영상o - 사본 <span class="mut">(CPA 129,956원 · Rule 5)</span> → <b>129,956원 회수</b><br><b><span class="cg cg2">260430 신규소재test</span></b> 28.영상z <span class="mut">(60,725원)</span> · 32.영상h2 <span class="mut">(구매 0)</span> · 31.영상31 · 25.영상w · 30.영상30 · 26.영상x → <b>562,321원 회수</b><br><b><span class="cg cg3">260408 치카프렌즈</span></b> 10.맘카페 <span class="mut">(84,974원)</span> · 14.단일이미지4 · 6.혜택 캐러셀 · 16.충치25 · 13.단일이미지3 → <b>258,574원 회수</b>',
+  '<b>회수 예산 950,851원 / 주</b>주간 지출의 24.0%<br>12개 합산: 구매 12건 · CPA 79,238원 · ROAS 66.6%'],
+ ['p2','P2 · 이번 주','예산 확대','<span class="badge b-scale">2개</span>',
+  '<b><span class="cg cg1">260422 쿨리</span></b> <b>21.영상s</b> — ROAS <b>470.6%</b> / CPA 13,790원인데 일 27,580원만 사용. <b>일 50,000원까지 증액</b> (+160,000원/주)<br><b><span class="cg cg1">260422 쿨리</span></b> <b>5.영상e</b> — 누적 60구매 · ROAS 283%의 검증 소재가 일 2,752원에 방치. <b>일 40,000원까지 증액</b> (+260,000원/주)<br><span class="mut">※ 29.영상29 / 11.영상h / 22.영상t는 이미 일예산 상한의 2배 → 현 수준 유지</span>',
+  '<b>배분 플랜</b>21.영상s +160,000원<br>5.영상e +260,000원<br>잔여 530,851원 → 신규 테스트'],
+ ['p3','P3 · 관찰','Watch','<span class="badge b-watch">3건</span>',
+  '<b><span class="cg cg1">260422 쿨리</span></b> <b>22.영상t</b> — CPA 27,032원으로 기준선(28,000원) 바로 아래. <b>지출 1위</b>인데 CTR 1.4%로 취약.<br><b><span class="cg cg3">260408 치카프렌즈</span></b> <b>18.맘카페2</b> — 6일차 · CPA 36,539원 (Rule 4).<br><b><span class="cg cg3">260408 치카프렌즈</span></b> <b>캠페인 자체</b> — 10.맘카페 OFF 시 남는 소재 1개뿐. <b>중지 여부 이번 주 결정.</b>',
+  '<b>다시 판단 시점</b>다음 주 화요일 대시보드에서 3건 재평가'],
+ ['p4','P4 · 테스트','신규 테스트','<span class="badge b-stable">3개</span>',
+  '<b><span class="cg cg1">260422 쿨리</span></b> ① <b>55-64 여성 공감 영상</b> — 최고 세그먼트(ROAS 376.0%) 정확히 겨냥. 큰 자막 · 명확한 혜택 · 느린 컷.<br><b><span class="cg cg2">260430</span></b> ② <b>29.영상29 파생 2종</b> — 첫 3초 구성 유지, 오프닝·CTA만 변경.<br><b><span class="cg cg1">260422 쿨리</span></b> ③ <b>11.영상h 대체 후보</b> — 49일 운영 주력 소재의 소재 노후 대비.',
+  '<b>테스트 규격</b>소재당 일 40,000원 × 7일<br>중단 기준: 7일차 지출 30,000원↑ & 구매 0 → OFF / CTR 2.0% 미만 → 경고'],
+ ['p5','P5 · 개선','크리에이티브 개선','<span class="badge b-opt">2건</span>',
+  '<b><span class="cg cg3">260408 치카프렌즈</span></b> <b>이미지·캐러셀 포맷 중단</b> — 4개 모두 노출 배분이 끊겼다. 리소스를 영상으로 100% 전환.<br><b>전 캠페인</b> <b>ATC→구매 전환율 방어</b> — 58.0%로 하락. 소재 단에서 가격·배송·혜택을 명시해 구매 의향 낮은 클릭을 거른다.',
+  '<b>측정 지표</b>다음 주 ATC→구매 전환율 65% 회복 여부']];
+
+/* ============ HELPERS ============ */
+const won=v=>v==null?'—':v.toLocaleString('ko-KR')+'원';
+const NS='http://www.w3.org/2000/svg';
+const el=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+const BADGE={scale:'<span class="badge b-scale">● Scale</span>',stable:'<span class="badge b-stable">● Stable</span>',watch:'<span class="badge b-watch">● Watch</span>',off:'<span class="badge b-off">● OFF</span>'};
+const sgn=(v,inv)=>{const good=inv?v<0:v>0;return `<span class="${v===0?'mut':(good?'up':'down')}">${v>0?'▲':'▼'} ${Math.abs(v).toFixed(1)}</span>`;};
+const kbox=(k,t)=>`<span class="k ${k}">${t}</span>`;
+const ccBox=rows=>`<div class="cc">${rows.map(([k,t,h])=>`<div>${kbox(k,t)}${h}</div>`).join('')}</div>`;
+
+/* ============ RENDER PIECES ============ */
+function kpiCards(){
+  const t=TOTAL, d=(a,b)=>((a-b)/b*100);
+  const C=[
+   ['CPA','25,928','원','y','● 근접',`<span class="up">▼ 28.8%</span> <span class="mut">vs 36,409</span>`,'목표 22,000원 · 초과 +17.9%'],
+   ['ROAS','221.5','%','y','● 근접',`<span class="up">▲ 63.1%p</span> <span class="mut">vs 158.4%</span>`,'목표 261% · 달성률 84.9%'],
+   ['구매','153','건','g','●',`<span class="up">▲ 45.7%</span> <span class="mut">vs 105건</span>`,'일평균 21.9건'],
+   ['지출','3,966,998','원','g','●',`<span class="mut">▲ 3.8% vs 3,822,909</span>`,'일평균 566,714원'],
+   ['구매 전환값','8,786,060','원','g','●',`<span class="up">▲ 45.1%</span> <span class="mut">vs 6,054,820</span>`,'객단가 57,425원 (-0.4%)'],
+   ['CTR','2.05','%','g','●',`<span class="up">▲ 0.66%p</span> <span class="mut">vs 1.39%</span>`,'클릭 2,831회 (+29.4%)'],
+   ['CPC','1,401','원','g','●',`<span class="up">▼ 19.8%</span> <span class="mut">vs 1,748원</span>`,'CPM 28,708원 (▲17.9%)']];
+  return `<div class="kpis">${C.map(([l,v,u,st,stt,d2,g])=>`<div class="kpi"><div class="t"><span>${l}</span><span class="st ${st}">${stt}</span></div><div class="v">${v}<small>${u}</small></div><div class="d">${d2}</div><div class="goal">${g}</div></div>`).join('')}</div>`;
+}
+
+function summary(){
+  const M=[['매출','8,786,060원','▲45.1%','구매 전환값'],['구매','153건','▲45.7%','지난주 105건'],['구매당 비용','25,928원','▼28.8%','목표 22,000원'],['ROAS','221.5%','▲63.1%p','목표 261%']];
+  const A=[['off','● OFF','12개 · 95만원 회수','<b>28.영상z</b>(CPA 60,725) · <b>10.맘카페</b>(84,974) · <b>14.영상o</b>(129,956) · <b>32.영상h2</b>(구매 0) + 노출 끊긴 8개 정리'],
+   ['exp','● 예산 확대','2개 · +42만원','<b>21.영상s</b> ROAS 470.6% · 일 27,580→50,000원<br><b>5.영상e</b> ROAS 440.7% · 일 2,752→40,000원'],
+   ['imp','● 개선 / 관찰','3건','<b>22.영상t</b> CPA 27,032 — 28,000 돌파 시 축소<br><b>18.맘카페2</b> 1주 관찰 (Rule 4)<br><b>치카프렌즈</b> ROAS 50.9% — 중지 검토']];
+  return `<section><div class="shead"><div class="snum">1</div><h2>주간 요약 <span class="hkr">· Weekly Summary</span></h2><div class="note">${META.period} vs ${META.prev}</div></div>
+   <div class="sb"><div class="sb-b" style="padding-top:20px">
+     <div class="mcards mc4">${M.map(([l,v,d,sb])=>`<div class="mc"><div class="ml">${l}</div><div class="mv">${v}</div><div class="md"><span class="badge b-scale">${d}</span><span class="ms">${sb}</span></div></div>`).join('')}</div>
+     <div class="spark"><div class="spark-h">일별 ROAS 흐름 <span class="mut">· 최근 14일</span></div><div id="t_spark" class="ichart"></div></div>
+    </div></div>
+   ${ccBox([['g','결론','<b>점진적 상승세.</b> 최근 3일(7/11–13) ROAS 266.5% · CPA 21,541원으로 <b>두 목표 달성</b>. 주간 평균 미달은 7/8·9 부진 탓.'],
+    ['b','근거','쿨리 2개(지출 92.6%) 동반 상승 — 260422 149.5→265.3%, 260430 166.7→190.2%. 반면 치카프렌즈 183.9→<b>50.9%</b> 큰 폭 하락.'],
+    ['r','액션','<b>운영 방향 — 이슈 최소화 후 다음 주 관찰.</b> 성과 미달·노출 중단 소재만 OFF, 예산 확대·신규 Hero 이동은 <b>안정적 흐름 회복까지 보류</b>. OFF 12개(95만원) 정리 시 CPA 21,391원 / ROAS 270.3% 예상. <span class="est">단순 계산</span>']])}
+   </section>`;
+}
+
+function lifetime(){
+  const C=[['누적 지출','34,784,222','원','y','전체','판매(ASC) 33,787,865원 · 97.1%'],
+   ['누적 구매','1,292','건','g','전체','일평균 13.5건 · 100% 판매 캠페인'],
+   ['누적 전환값','74,170,245','원','g','전체','누적 객단가 57,407원'],
+   ['평균 CPA','26,923','원','r','● 미달','목표 22,000원 · 초과 +22.4%<br>판매 캠페인만 26,152원'],
+   ['평균 ROAS','213.2','%','r','● 미달','목표 261% · 달성률 81.7%<br>판매 캠페인만 219.1%']];
+  const rows=LIFEROWS.map(r=>`<tr class="${r[13]?'dim':''}"><td class="nm">${r[0]}</td><td class="sub">${r[1]}</td><td class="sub">${r[2]}</td><td>${r[3]}</td><td>${won(r[4])}</td><td>${r[5]}</td><td>${r[6]}</td><td>${won(r[7])}</td><td>${r[8]}</td><td>${r[9]}</td><td>${r[10]}</td><td>${r[11]}</td><td>${r[12]}</td></tr>`).join('');
+  return `<section><div class="shead"><div class="snum">5</div><h2>전 기간 누적 성과 <span class="hkr">· Lifetime Performance</span></h2><div class="note">${META.rangeAll} · ${META.days}일</div></div>
+  <div class="kpis" style="grid-template-columns:repeat(5,1fr);margin-bottom:13px">
+  ${C.map(([l,v,u,st,stt,g])=>`<div class="kpi"><div class="t"><span>${l}</span><span class="st ${st}">${stt}</span></div><div class="v">${v}<small>${u}</small></div><div class="goal">${g}</div></div>`).join('')}</div>
+  <div class="card"><div class="chead"><div class="ctitle">캠페인별 누적 성과</div><div class="legend"><span>종료 캠페인 포함</span></div></div>
+  <div class="tw"><table><thead><tr><th>캠페인</th><th>유형</th><th>운영 기간</th><th>운영일</th><th>누적 지출</th><th>비중</th><th>누적 구매</th><th>누적 전환값</th><th>평균 CPA</th><th>평균 ROAS</th><th>CTR</th><th>CPC</th><th>판정</th></tr></thead>
+  <tbody>${rows}</tbody>
+  <tfoot><tr><td>전체 합계 (9개)</td><td></td><td class="sub">04.08 – 07.13</td><td>96일</td><td>34,784,222원</td><td>100%</td><td>1,292</td><td>74,170,245원</td><td>26,923원</td><td>213.2%</td><td>2.25%</td><td>960원</td><td></td></tr>
+  <tr><td>판매(ASC) 캠페인만</td><td></td><td class="sub">04.08 – 07.13</td><td>96일</td><td>33,787,865원</td><td>97.1%</td><td>1,292</td><td>74,042,045원</td><td>26,152원</td><td>219.1%</td><td>2.01%</td><td>1,185원</td><td></td></tr></tfoot></table></div>
+  ${ccBox([['b','결론','<b>누적 기준으로는 두 목표 모두 미달</b>(평균 CPA 26,923원 / ROAS 213.2%). 다만 <b>260422_쿨리(ROAS 243.6%)</b>가 누적 지출의 47.5%를 쓰며 계정 전체를 받쳐주는 축.'],
+   ['r','근거','치카프렌즈 계열 3개는 누적 <b>4,767,558원(13.7%)</b>을 쓰고 구매 <b>122건</b>, 평균 ROAS <b>124.7%</b>. 반면 쿨리 판매 2개는 누적 29,358,763원에 구매 <b>1,170건</b>, ROAS <b>232.0%</b>. <b>브랜드 간 성과 격차 뚜렷.</b>'],
+   ['g','액션','비판매 캠페인(트래픽·참여) 5개는 누적 996,357원을 쓰고 구매 0건 — 이미 전부 종료. <b>판매(ASC) 중심 운영 유지</b>, 치카프렌즈는 브랜드 단위 재검토 필요.']])}
+  </div></section>`;
+}
+
+function campKPI(c){
+  const w=c.wk;
+  const K=[['CPA',w.cpaSt,w.cpa.toLocaleString(),'원',w.dcpa,1],['ROAS',w.roasSt,w.roas,'%',w.droas,0],
+   ['구매','',w.pur,'건',w.dpur,0],['지출','',(w.spend/10000).toFixed(0),'만원',w.dspend,0],
+   ['전환값','',(w.rev/10000).toFixed(0),'만원',w.drev,0],['CTR','',w.ctr,'%',w.dctr,0],['CPC','',w.cpc.toLocaleString(),'원',w.dcpc,1]];
+  return `<div class="cmp ${c.cls}">
+   <div class="cmp-h"><div class="bar"></div><div class="ci"><div class="cname">${c.name}<span class="ctype">${c.type||''}</span></div><div class="cmeta">${c.meta}</div></div><div style="display:flex;gap:7px;flex-wrap:wrap">${c.badge}</div></div>
+   <div class="cmp-b">
+    <div class="ckpi">${K.map(([l,st,v,u,d,inv],i)=>`<div class="ck ${i<2?'hi':''}"><div class="l"><span>${l}</span><span>${st}</span></div><div class="v">${v}<small>${u}</small></div><div class="c">${sgn(d,inv)}${l==='ROAS'?'%p':(l==='CTR'?'%p':'%')}</div></div>`).join('')}</div>
+    <div class="cum"><div class="cum-l">누적 (${c.cum.period})</div>
+     <div class="cum-i"><span>누적 지출</span><b>${c.cum.spend}</b></div>
+     <div class="cum-i"><span>누적 구매</span><b>${c.cum.pur}</b></div>
+     <div class="cum-i"><span>누적 전환값</span><b>${c.cum.rev}</b></div>
+     <div class="cum-i"><span>평균 CPA</span><b class="${c.cum.cpaC}">${c.cum.cpa}</b></div>
+     <div class="cum-i"><span>평균 ROAS</span><b class="${c.cum.roasC}">${c.cum.roas}</b></div></div>
+    ${heroStrip(c)}
+    ${ccBox(c.sum)}
+   </div></div>`;
+}
+
+/* SVG line charts */
+const W=640,H=210,PL=54,PR=16,PT=14,PB=24,iw=W-PL-PR,ih=H-PT-PB;
+const X=i=>PL+iw*i/(DAYS.length-1), Y=(v,mx)=>PT+ih*(1-v/mx);
+const fmt=v=>v>=10000?(v/10000).toFixed(0)+'만':v>=1000?(v/1000).toFixed(0)+'k':Math.round(v);
+function base(mx,ylab){
+  const s=el('svg',{viewBox:`0 0 ${W} ${H}`});
+  for(let i=0;i<=4;i++){const y=PT+ih*i/4,v=mx*(1-i/4);
+    s.appendChild(el('line',{x1:PL,x2:W-PR,y1:y,y2:y,stroke:i===4?'#d5d9e0':'#f0f1f3','stroke-width':1}));
+    const t=el('text',{x:PL-9,y:y+3.5,fill:'#9aa1ac','font-size':9.5,'text-anchor':'end'});t.textContent=ylab(v);s.appendChild(t);}
+  DAYS.forEach((d,i)=>{const t=el('text',{x:X(i),y:H-6,fill:'#9aa1ac','font-size':8.5,'text-anchor':'middle'});t.textContent=d;s.appendChild(t);});
+  return s;
+}
+function line(node,data,color,mx,ylab,goal){
+  const s=base(mx,ylab);
+  if(goal!=null){const gy=Y(goal,mx);s.appendChild(el('line',{x1:PL,x2:W-PR,y1:gy,y2:gy,stroke:'#0576C9','stroke-width':1.3,'stroke-dasharray':'5 4'}));}
+  const pts=data.map((v,i)=>[X(i),Y(Math.min(v,mx),mx)]);
+  const id='g'+Math.random().toString(36).slice(2,7);
+  const defs=el('defs',{}),g=el('linearGradient',{id,x1:0,y1:0,x2:0,y2:1});
+  g.appendChild(el('stop',{offset:'0%','stop-color':color,'stop-opacity':.18}));
+  g.appendChild(el('stop',{offset:'100%','stop-color':color,'stop-opacity':0}));
+  defs.appendChild(g);s.appendChild(defs);
+  s.appendChild(el('path',{d:`M ${pts[0][0]} ${PT+ih} `+pts.map(p=>`L ${p[0]} ${p[1]}`).join(' ')+` L ${pts[pts.length-1][0]} ${PT+ih} Z`,fill:`url(#${id})`}));
+  s.appendChild(el('path',{d:'M '+pts.map(p=>`${p[0]} ${p[1]}`).join(' L '),fill:'none',stroke:color,'stroke-width':2.2,'stroke-linejoin':'round'}));
+  pts.forEach((p,i)=>s.appendChild(el('circle',{cx:p[0],cy:p[1],r:i>=7?3.3:2.5,fill:i>=7?color:'#fff',stroke:color,'stroke-width':1.7})));
+  node.appendChild(s);
+}
+function combo(node){
+  const s=base(700000,fmt),bw=iw/DAYS.length*.58;
+  TREND.spend.forEach((v,i)=>{const x=X(i)-bw/2,y=Y(v,700000);s.appendChild(el('rect',{x,y,width:bw,height:PT+ih-y,rx:3,fill:i>=7?'#c7d7f0':'#e6eaf0'}));});
+  const p=TREND.pur.map((v,i)=>[X(i),Y(v,36)]);
+  s.appendChild(el('path',{d:'M '+p.map(q=>`${q[0]} ${q[1]}`).join(' L '),fill:'none',stroke:'#2F6FE0','stroke-width':2.2}));
+  p.forEach((q,i)=>{s.appendChild(el('circle',{cx:q[0],cy:q[1],r:3,fill:'#fff',stroke:'#2F6FE0','stroke-width':1.8}));
+   const t=el('text',{x:q[0],y:q[1]-8,fill:'#2F6FE0','font-size':8.5,'text-anchor':'middle','font-weight':700});t.textContent=TREND.pur[i];s.appendChild(t);});
+  node.appendChild(s);
+}
+function multi(node,series,mx){
+  const s=base(mx,v=>Math.round(v)+'%'),gy=Y(261,mx);
+  s.appendChild(el('line',{x1:PL,x2:W-PR,y1:gy,y2:gy,stroke:'#0576C9','stroke-width':1.3,'stroke-dasharray':'5 4'}));
+  series.forEach(([d,c])=>{const pts=d.map((v,i)=>[X(i),Y(Math.min(v,mx),mx)]);
+   s.appendChild(el('path',{d:'M '+pts.map(p=>`${p[0]} ${p[1]}`).join(' L '),fill:'none',stroke:c,'stroke-width':2.2,'stroke-linejoin':'round'}));
+   pts.forEach(p=>s.appendChild(el('circle',{cx:p[0],cy:p[1],r:2.5,fill:'#fff',stroke:c,'stroke-width':1.6})));});
+  node.appendChild(s);
+}
+function donut(node,cfg){
+  const S=180,R=68,r=45,cx=S/2,cy=S/2;
+  const svg=el('svg',{viewBox:`0 0 ${S} ${S}`});
+  let a=-Math.PI/2;const arcs=cfg.items.filter(x=>x.p>0);
+  if(!arcs.length) svg.appendChild(el('circle',{cx,cy,r:(R+r)/2,fill:'none',stroke:'#e5e7eb','stroke-width':R-r}));
+  arcs.forEach(it=>{
+    const ang=it.p/cfg.total*Math.PI*2,b=a+ang,big=ang>Math.PI?1:0;
+    const x1=cx+R*Math.cos(a),y1=cy+R*Math.sin(a),x2=cx+R*Math.cos(b),y2=cy+R*Math.sin(b);
+    const x3=cx+r*Math.cos(b),y3=cy+r*Math.sin(b),x4=cx+r*Math.cos(a),y4=cy+r*Math.sin(a);
+    svg.appendChild(el('path',{d:`M ${x1} ${y1} A ${R} ${R} 0 ${big} 1 ${x2} ${y2} L ${x3} ${y3} A ${r} ${r} 0 ${big} 0 ${x4} ${y4} Z`,fill:it.c,stroke:'#fff','stroke-width':2}));
+    const pct=it.p/cfg.total*100;
+    if(pct>=10){const m=(a+b)/2,lr=(R+r)/2;const t=el('text',{x:cx+lr*Math.cos(m),y:cy+lr*Math.sin(m)+4,fill:'#fff','font-size':11,'font-weight':800,'text-anchor':'middle'});t.textContent=Math.round(pct)+'%';svg.appendChild(t);}
+    a=b;});
+  const wrap=document.createElement('div');wrap.className='dn-c';
+  wrap.appendChild(svg);
+  const c=document.createElement('div');c.className='ctr';c.innerHTML=`<div class="n">${cfg.total}</div><div class="l">주간 구매</div>`;
+  wrap.appendChild(c);node.appendChild(wrap);
+  const lg=document.createElement('div');
+  lg.innerHTML=`<div class="lg-h"><span>소재</span><span>구매</span><span>비중</span><span>효율지수</span></div>`+
+   cfg.items.map(it=>{const pct=cfg.total?it.p/cfg.total*100:0,eff=it.sp>0?pct/it.sp:0;
+    const cls=eff>=1?'eff-g':(eff>=0.7?'eff-n':'eff-r');
+    return `<div class="lg-r"><div class="nm2"><span class="sw" style="background:${it.c}"></span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${it.n}</span></div><div class="num">${it.p}건</div><div class="num">${pct.toFixed(1)}%</div><div class="eff ${cls}">${eff.toFixed(2)}${eff>=1?' ▲':(eff<0.7?' ▼':'')}</div></div>`;}).join('');
+  node.appendChild(lg);
+}
+function bwCard(b){
+  const cls=b.kind==='best'?'best':(b.kind==='worst'?'worst':'na');
+  const tag=b.kind==='best'?'★ Best':(b.kind==='worst'?'▼ Worst':'★ Best (상대적 우위)');
+  return `<div class="bwc ${cls}"><div class="tag">${tag}</div><div class="cn">${b.n}</div><div class="cs">${b.s}</div>
+  <div class="mgrid">${b.m.map(([l,v,c])=>`<div class="m"><div class="ml">${l}</div><div class="mv ${c}">${v}</div></div>`).join('')}</div>
+  <div class="reason">${b.r.map(([l,t])=>`<span class="rl">${l}</span>${t}`).join('')}</div></div>`;
+}
+
+/* sortable creative table */
+const SORT={};
+function creativeTable(c){
+  const key=c.id, st=SORT[key]||{col:2,dir:-1};
+  const rows=[...c.creatives].sort((a,b)=>{
+    let A=a[st.col],B=b[st.col];
+    if(A==null)A=-1; if(B==null)B=-1;
+    if(typeof A==='string'&&typeof B==='string')return st.dir*A.localeCompare(B,'ko');
+    return st.dir*((A||0)-(B||0));});
+  const COLS=[['소재',0,0],['운영일',1,0],['지출',2,1],['일평균',3,1],['예산',4,1],['구매',5,1],['CPA',6,1],['ROAS',7,1],['CTR',8,1],['지난주 CPA',9,1],['추세',10,1]];
+  const th=COLS.map(([l,i,wk])=>`<th class="srt ${wk?'wkc':''} ${st.col===i?(st.dir>0?'asc':'desc'):''}" data-c="${key}" data-i="${i}">${l}</th>`).join('');
+  const body=rows.map(r=>{
+    const cpaC=r[6]==null?'neg':(r[6]<=22000?'pos':(r[6]>33000?'neg':''));
+    const roasC=r[7]>=261?'pos':(r[7]<100?'neg':'');
+    const trC=r[10].includes('악화')||r[10].includes('구매 0')||r[10].includes('중단')?'neg':(r[10].includes('개선')?'pos':'');
+    return `<tr class="${r[14]?'dim':''}"><td class="nm">${r[0]}</td><td>${r[1]}</td>
+    <td class="wkc">${won(r[2])}</td><td class="wkc">${won(r[3])}</td><td class="wkc">${r[4]}</td><td class="wkc">${r[5]}</td>
+    <td class="wkc ${cpaC}">${r[6]==null?'—':won(r[6])}</td><td class="wkc ${roasC}">${r[7].toFixed(1)}%</td><td class="wkc">${r[8]?r[8].toFixed(1)+'%':'—'}</td>
+    <td class="wkc">${r[9]}</td><td class="wkc ${trC}">${r[10]}</td><td>${BADGE[r[11]]}</td><td class="sub" style="text-align:left">${r[12]}</td></tr>`;}).join('');
+  const f=c.cfoot;
+  return `<div class="cmp ${c.cls}">
+   <div class="cmp-h"><div class="bar"></div><div class="ci"><div class="cname">${c.name}</div>
+   <div class="cmeta">소재 ${c.creatives.length}개 · <b style="color:${c.color}">주간</b> 지출 ${won(c.wk.spend)} / 구매 ${c.wk.pur}건 / CPA ${won(c.wk.cpa)} / ROAS ${c.wk.roas}%</div></div>
+   <div style="display:flex;gap:6px;flex-wrap:wrap">${c.ctags}</div></div>
+   <div class="cmp-b"><div class="tw"><table>
+    <thead><tr><th class="grp na"></th><th class="grp na"></th><th class="grp wk" colspan="9">주간 · 최근 7일 (${META.period.slice(5)})</th><th class="grp na"></th><th class="grp na"></th></tr>
+    <tr>${th}<th>상태</th><th>적용 규칙</th></tr></thead>
+    <tbody>${body}</tbody>
+    <tfoot><tr><td>소계</td><td></td><td class="wkc">${f[0]}</td><td class="wkc"></td><td class="wkc"></td><td class="wkc">${f[1]}</td><td class="wkc">${f[2]}</td><td class="wkc">${f[3]}</td><td class="wkc">${f[4]}</td><td class="wkc">${f[5]}</td><td class="wkc"></td><td colspan="2"></td></tr></tfoot>
+   </table></div>${ccBox(c.csum)}</div></div>`;
+}
+
+function audience(){
+  const A=AUDIENCE.age.map(r=>`<tr><td class="nm">${r[0]}</td><td>${won(r[1])}</td><td>${r[2]}</td><td class="${r[8]}">${r[3]}</td><td class="${r[9]}">${r[4]}</td><td>${r[5]}</td><td class="${r[10]}">${r[6]}</td><td>${BADGE[r[7]]||'<span class="badge b-off">● 제외</span>'}</td></tr>`).join('');
+  return `<section><div class="shead"><div class="snum">6</div><h2>오디언스(연령·성별) 성과 <span class="hkr">· Audience Dashboard</span></h2><div class="note">주간 · ASC 특성상 직접 타겟팅 불가 → 소재로 조준</div></div>
+  <div class="g2">
+   <div class="card"><div class="chead"><div class="ctitle">연령별 성과</div></div>
+    <table><thead><tr><th>연령</th><th>지출</th><th>구매</th><th>CPA</th><th>ROAS</th><th>지난주 ROAS</th><th>CTR</th><th>판정</th></tr></thead><tbody>${A}</tbody></table>
+    ${ccBox([['g','핵심','<b>55-64세 압도적 1위</b> — CPA 19,078원 / ROAS 325.0%로 <b>유일하게 두 목표 동시 달성</b>. 노출 점유율 11.5%인데 구매의 26.1%를 만듦. 반면 <b>18-24세는 2주 연속 실패</b>(2주 합산 223,365원 / 구매 2건, CTR 0.9%).']])}
+   </div>
+   <div class="card"><div class="chead"><div class="ctitle">연령대별 구매 · 성별</div><div class="legend"><span><i style="background:#06A6FF"></i>남성</span><span><i style="background:#7AC4FF"></i>여성</span></div></div>
+    <div id="a_bar"></div>
+    ${ccBox([['b','핵심','<b>45-54·55-64 여성</b>이 구매를 주도, 남성은 <b>25-34·35-44</b>에 집중. 25-34는 남성(312%)이 여성(134%)의 2.3배로 성별 편차 큼.']])}
+   </div></div>
+  ${ccBox([['g','결론','오디언스 효율의 중심이 <b>고연령(55-64) + 여성</b> 및 <b>25-34 남성</b>으로 이동.'],
+   ['b','근거','55-64세는 노출의 11.5%(15,926회)만 차지하는데 구매의 26.1%(40건) 창출. 노출 대비 구매 효율이 45-54세의 <b>2.2배</b>, CTR도 3.6%로 최상위.'],
+   ['','액션','<b>소재 레벨로 조준</b> — 55-64 여성 공감 포인트(큰 자막 / 명확한 혜택 / 느린 컷) 신규 소재를 260422_쿨리에 투입하고, 18-24 노출을 유발하는 요소(트렌디 BGM·빠른 컷)를 축소.']])}
+  </section>`;
+}
+
+function kpiExec(){
+  const C=[
+   ['CPA','25,928','원','y','● 근접','<span class="up">▼28.8%</span> <span class="mut">vs 36,409</span>','목표 22,000원 · 초과 +17.9%'],
+   ['ROAS','221.5','%','y','● 근접','<span class="up">▲63.1%p</span> <span class="mut">vs 158.4%</span>','목표 261% · 달성률 84.9%'],
+   ['구매','153','건','g','●','<span class="up">▲45.7%</span> <span class="mut">vs 105건</span>','일평균 21.9건'],
+   ['구매 전환값','8,786,060','원','g','●','<span class="up">▲45.1%</span> <span class="mut">vs 605만</span>','객단가 57,425원'],
+   ['지출','3,966,998','원','g','●','<span class="mut">▲3.8% vs 382만</span>','일평균 566,714원']];
+  return `<div class="kpis" style="grid-template-columns:repeat(5,1fr)">${C.map(([l,v,u,st,stt,d,g])=>`<div class="kpi"><div class="t"><span>${l}</span><span class="st ${st}">${stt}</span></div><div class="v">${v}<small>${u}</small></div><div class="d">${d}</div><div class="goal">${g}</div></div>`).join('')}</div>`;
+}
+
+function signalSection(){
+  const S=[
+   {cls:'c1',tone:'win',short:CAMPS[0].short,st:'● Scale',bcls:'b-scale',roas:'265.3',roasOK:1,rprev:'149.5',cpa:'23,401',cpaSt:'●',cpaG:'초과 +6%',spend:'220만',pur:94,share:61,
+    vd:'유일하게 <b>ROAS 목표 초과 달성</b>. 계정 전체를 떠받치는 핵심 캠페인.',ac:'▶ 예산 확대 — 21.영상s·5.영상e 증액'},
+   {cls:'c2',tone:'mid',short:CAMPS[1].short,st:'● Stable',bcls:'b-stable',roas:'190.2',roasOK:0,rprev:'166.7',cpa:'26,767',cpaSt:'●',cpaG:'초과 +22%',spend:'147만',pur:55,share:36,
+    vd:'개선 중이나 <b>소재 소재 간 편차</b> — 29.영상29가 구매 85%, 나머지가 예산 낭비.',ac:'▶ 부진 소재 6개 OFF 후 재정비'},
+   {cls:'c3',tone:'bad',short:CAMPS[2].short,st:'● OFF',bcls:'b-off',roas:'50.9',roasOK:0,rprev:'183.9',cpa:'73,778',cpaSt:'●',cpaG:'목표 3.4배',spend:'29.5만',pur:4,share:3,
+    vd:'<b>광고비 절반도 회수 못 함.</b> 소재 6개 중 4개는 이미 노출 중단.',ac:'▶ 캠페인 중지 또는 소재 전면 교체'}
+  ];
+  return `<section><div class="shead"><div class="snum">2</div><h2>캠페인 요약 <span class="hkr">· Campaign Summary</span></h2><div class="note">${META.period}</div></div>
+  <div class="sigs">${S.map(s=>`
+   <div class="sig ${s.cls} ${s.tone}"><div class="top"><div class="bar"></div><div class="nm">${s.short}</div><span class="badge ${s.bcls}">${s.st}</span></div>
+    <div class="bd">
+     <div class="big">
+      <div class="bigm"><div class="l"><span>ROAS</span><span>${s.roasOK?'✓':'✕'}</span></div><div class="v">${s.roas}<small>%</small></div><div class="g">목표 261% · 지난주 ${s.rprev}%</div></div>
+      <div class="bigm"><div class="l"><span>CPA</span><span>${s.cpaSt}</span></div><div class="v">${s.cpa}<small>원</small></div><div class="g">목표 22,000원 · ${s.cpaG}</div></div>
+     </div>
+     <div class="sigchart-h">ROAS 흐름 <span class="mut">· 최근 14일</span></div><div class="sigchart" id="sig_${s.cls}"></div>
+     <div class="sub2">지출 <b>${s.spend}원</b> · 구매 <b>${s.pur}건</b> <span class="mut">(전체의 ${s.share}%)</span></div>
+     <div class="vd">${s.vd}<span class="ac">${s.ac}</span></div>
+    </div></div>`).join('')}</div></section>`;
+}
+
+function nextWeekSection(){
+  const G=[
+   ['주간 ROAS','261','%',84.9,'현재 221.5%','하위 소재 12개 OFF로 평균 상승'],
+   ['주간 CPA','22,000','원',84.9,'현재 25,928원','고CPA 소재(28.영상z·10.맘카페) 차단'],
+   ['주간 구매','170','건',90.0,'현재 153건 (+11%)','21.영상s·5.영상e 증액'],
+   ['ATC→구매율','65','%',89.2,'현재 58.0%','랜딩·결제 이탈 점검 + 가격·배송 명시']];
+  return `<section><div class="shead"><div class="snum">3</div><h2>다음 주 목표 <span class="hkr">· Next Week</span></h2><div class="note">2026.07.14 – 07.20 · 목표 · 진척률 · 실행 레버</div></div>
+  <div class="card"><div class="goals">${G.map(([l,v,u,pct,cur,act])=>`<div class="goal-t"><div class="gl">${l} 목표</div><div class="gv">${v}<small>${u}</small></div><div class="gbar"><span style="width:${pct}%"></span></div><div class="gs"><span class="gcur">${cur} · 달성 ${Math.round(pct)}%</span><span class="gact">▶ ${act}</span></div></div>`).join('')}</div></div></section>`;
+}
+
+function actionsFull(){
+  const A=[
+   ['p1','● 소재 OFF','12개','95만원 회수','28.영상z · 10.맘카페 · 14.영상o 외 9개'],
+   ['p2','● 예산 확대','2개','+42만원','21.영상s · 5.영상e 증액'],
+   ['p3','● 관찰','3건','다음 주 재평가','22.영상t · 18.맘카페2 · 치카 캠페인'],
+   ['p4','● 신규 테스트','3개','일 4만 × 7일','55-64여성 · 29파생 · 11대체'],
+   ['p5','● 크리에이티브','2건','ATC 65% 목표','이미지 OFF · 가격 명시']];
+  const F=[['21.영상s','+160,000원',16.8,'var(--green)'],['5.영상e','+260,000원',27.3,'var(--green)'],['신규 테스트','+530,851원',55.8,'var(--purple)']];
+  return `<section><div class="shead"><div class="snum">4</div><h2>실행 과제 <span class="hkr">· Action Items</span></h2><div class="note">OFF → 확대 → 관찰 → 테스트 → 개선</div></div>
+   <div class="acards">${A.map(([p,t,c,f,sb])=>`<div class="acard ${p}"><div class="ah"><span class="pri ${p}">${p.toUpperCase()}</span><span class="acount">${c}</span></div><div class="atitle">${t}</div><div class="afig">${f}</div><div class="asub">${sb}</div></div>`).join('')}</div>
+   <div class="card"><div class="ctitle" style="margin-bottom:14px">예산 재배분 — OFF 95만원 회수 → 이동</div>
+    <div class="flowbars">${F.map(([n,v,w,c])=>`<div class="flowrow"><span class="fn">${n}</span><span class="fbar"><span style="width:${w}%;background:${c}"></span></span><span class="fv">${v}</span></div>`).join('')}</div>
+   </div></section>`;
+}
+
+function insightSection(){
+  return `<section><div class="shead"><div class="snum">7</div><h2>소재 인사이트 <span class="hkr">· Creative Insight</span></h2></div>
+   <div class="g3">${INSIGHTS.map(([h,p,r])=>`<div class="ic"><div class="ih">${h}</div><p>${p}</p><div class="rec">${r}</div></div>`).join('')}</div></section>`;
+}
+
+function detailSection(){
+  return `<div class="dlabel">실무용 상세 데이터</div>
+   <div class="dtog"><button id="moreBtn"></button></div>
+   <div id="moreWrap" class="hide">${actionsFull()}${lifetime()}${audience()}${insightSection()}${nextTestSection()}</div>`;
+}
+function bindDetail(){
+  const b=document.getElementById('moreBtn'),w=document.getElementById('moreWrap');
+  if(!b)return;
+  let open=false; try{open=localStorage.getItem('metaMore')==='1';}catch(e){}
+  const set=()=>{w.classList.toggle('hide',!open);b.textContent=open?'▴ 상세 데이터 접기':'▾ 상세 데이터 펼치기 (누적·오디언스·인사이트·전체 액션)';try{localStorage.setItem('metaMore',open?'1':'0');}catch(e){}};
+  b.onclick=()=>{open=!open;set();}; set();
+}
+
+function heroStrip(c){
+  const days=DAYS.slice(-7), vals=c.trend.slice(-7);
+  const flow=vals.map((v,i)=>`<span class="fl ${v<130?'lo':''}">${days[i]} <b>${Math.round(v)}%</b></span>`).join('<span class="ar">›</span>');
+  return `<div class="hero"><div class="hero-l">Hero Creative</div><div class="hero-c"><b>${c.hero.n}</b><span>"${c.hero.copy}"</span></div></div>
+   <div class="flow"><div class="flow-l">ROAS 흐름 <span class="mut">· 최근 7일 (주황=목표 미만)</span></div><div class="flow-b">${flow}</div></div>`;
+}
+
+function barGroup(node,data){
+  const W=640,H=168,PL=36,PR=14,PT=14,PB=26,iw=W-PL-PR,ih=H-PT-PB;
+  const max=(Math.max(...data.flatMap(d=>[d[1],d[2]]))||1)*1.25;
+  const s=el('svg',{viewBox:`0 0 ${W} ${H}`});
+  for(let i=0;i<=4;i++){const y=PT+ih*i/4,v=Math.round(max*(1-i/4));
+    s.appendChild(el('line',{x1:PL,x2:W-PR,y1:y,y2:y,stroke:i===4?'#d5d9e0':'#f0f1f3','stroke-width':1}));
+    const t=el('text',{x:PL-8,y:y+3.5,fill:'#9aa1ac','font-size':9.5,'text-anchor':'end'});t.textContent=v;s.appendChild(t);}
+  const gw=iw/data.length,bw=Math.min(22,gw*0.28);
+  data.forEach((d,i)=>{
+    const cx=PL+gw*(i+0.5);
+    [[d[1],'#06A6FF',-bw*0.6],[d[2],'#7AC4FF',bw*0.6]].forEach(([v,c,off])=>{
+      const h=ih*v/max,x=cx+off-bw/2,y=PT+ih-h;
+      s.appendChild(el('rect',{x,y,width:bw,height:Math.max(h,0),rx:3,fill:c}));
+      if(v>0){const t=el('text',{x:cx+off,y:y-5,fill:c,'font-size':9,'font-weight':700,'text-anchor':'middle'});t.textContent=v;s.appendChild(t);}
+    });
+    const lt=el('text',{x:cx,y:H-9,fill:'#5a6474','font-size':10,'font-weight':600,'text-anchor':'middle'});lt.textContent=d[0];s.appendChild(lt);
+  });
+  node.appendChild(s);
+}
+
+function topCards(){
+  const C=[['누적 광고비','34,784,222','원','판매 캠페인 97%',''],
+   ['누적 구매','1,292','건','일평균 13.5건',''],
+   ['총 평균 CPA','26,923','원','목표 22,000원 · +22%','down'],
+   ['총 평균 ROAS','213.2','%','목표 261% · 달성 82%','down']];
+  return `<section style="padding-top:6px"><div class="shead"><div class="snum">₩</div><h2>누적 성과 <span class="hkr">· Lifetime Overview</span></h2><div class="note">${META.rangeAll}</div></div>
+   <div class="topcards">
+    <div class="tc hero"><div class="tl">총 누적 매출</div><div class="tv">74,170,245<small>원</small></div><div class="ts"><span class="tbadge">▲ 지난주 대비 +18.4%</span></div></div>
+    ${C.map(([l,v,u,sb,c])=>`<div class="tc"><div class="tl">${l}</div><div class="tv">${v}<small>${u}</small></div><div class="ts ${c}">${sb}</div></div>`).join('')}
+   </div></section>`;
+}
+
+function sparkline(node,data,color,goal){
+  const W=1560,H=150,PL=10,PR=18,PT=20,PB=16,iw=W-PL-PR,ih=H-PT-PB;
+  const mx=Math.max(...data,goal)*1.08,mn=Math.min(...data)*0.9;
+  const X=i=>PL+iw*i/(data.length-1),Y=v=>PT+ih*(1-(v-mn)/(mx-mn));
+  const s=el('svg',{viewBox:`0 0 ${W} ${H}`});
+  if(goal!=null){const gy=Y(goal);s.appendChild(el('line',{x1:PL,x2:W-PR,y1:gy,y2:gy,stroke:'#0B62D6','stroke-width':1.2,'stroke-dasharray':'5 4'}));
+    const t=el('text',{x:W-PR,y:gy-4,fill:'#0B62D6','font-size':9,'text-anchor':'end','font-weight':700});t.textContent='목표 '+goal;s.appendChild(t);}
+  const pts=data.map((v,i)=>[X(i),Y(v)]);
+  const id='sp'+Math.random().toString(36).slice(2,6);
+  const defs=el('defs',{}),g=el('linearGradient',{id,x1:0,y1:0,x2:0,y2:1});
+  g.appendChild(el('stop',{offset:'0%','stop-color':color,'stop-opacity':.20}));
+  g.appendChild(el('stop',{offset:'100%','stop-color':color,'stop-opacity':0}));
+  defs.appendChild(g);s.appendChild(defs);
+  s.appendChild(el('path',{d:`M ${pts[0][0]} ${PT+ih} `+pts.map(q=>`L ${q[0]} ${q[1]}`).join(' ')+` L ${pts[pts.length-1][0]} ${PT+ih} Z`,fill:`url(#${id})`}));
+  s.appendChild(el('path',{d:'M '+pts.map(q=>`${q[0]} ${q[1]}`).join(' L '),fill:'none',stroke:color,'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'}));
+  const L=pts[pts.length-1];s.appendChild(el('circle',{cx:L[0],cy:L[1],r:3.2,fill:'#fff',stroke:color,'stroke-width':2}));
+  node.appendChild(s);
+}
+
+function roasChart(node,data,goal,color,opts){
+  color=color||'#06A6FF';opts=opts||{};
+  const showLab=opts.labels!==false,showGrid=opts.grid!==false;
+  const n=data.length,VW=1000,VH=300,PT=showLab?22:10,PB=showLab?34:10,PL=6,PR=6,iw=VW-PL-PR,ih=VH-PT-PB;
+  const mx=Math.max(...data,goal)*1.06,mn=Math.min(...data)*0.9;
+  const X=i=>PL+iw*i/(n-1),Y=v=>PT+ih*(1-(v-mn)/(mx-mn));
+  const pts=data.map((v,i)=>[X(i),Y(v)]);
+  const svg=el('svg',{viewBox:`0 0 ${VW} ${VH}`,preserveAspectRatio:'none','class':'ic-svg'});
+  if(showGrid){for(let g=0;g<=4;g++){const y=PT+ih*g/4;svg.appendChild(el('line',{x1:PL,x2:VW-PR,y1:y,y2:y,stroke:'#EEF1F5','stroke-width':1,'vector-effect':'non-scaling-stroke'}));}}
+  if(goal!=null){const gy=Y(goal);svg.appendChild(el('line',{x1:PL,x2:VW-PR,y1:gy,y2:gy,stroke:'#0B62D6','stroke-width':1.3,'stroke-dasharray':'6 5','vector-effect':'non-scaling-stroke'}));}
+  const id='rc'+Math.random().toString(36).slice(2,6),defs=el('defs',{}),lg=el('linearGradient',{id,x1:0,y1:0,x2:0,y2:1});
+  lg.appendChild(el('stop',{offset:'0%','stop-color':color,'stop-opacity':.20}));
+  lg.appendChild(el('stop',{offset:'100%','stop-color':color,'stop-opacity':0}));
+  defs.appendChild(lg);svg.appendChild(defs);
+  svg.appendChild(el('path',{d:`M ${pts[0][0]} ${PT+ih} `+pts.map(q=>`L ${q[0]} ${q[1]}`).join(' ')+` L ${pts[n-1][0]} ${PT+ih} Z`,fill:`url(#${id})`}));
+  svg.appendChild(el('path',{d:'M '+pts.map(q=>`${q[0]} ${q[1]}`).join(' L '),fill:'none',stroke:color,'stroke-width':2.2,'stroke-linejoin':'round','stroke-linecap':'round','vector-effect':'non-scaling-stroke'}));
+  node.appendChild(svg);
+  const ov=document.createElement('div');ov.className='ic-ov';
+  ov.innerHTML='<div class="ic-vline"></div><div class="ic-dot"></div><div class="ic-tip"></div>';
+  node.appendChild(ov);
+  const vline=ov.querySelector('.ic-vline'),dot=ov.querySelector('.ic-dot'),tip=ov.querySelector('.ic-tip');
+  dot.style.borderColor=color;dot.style.boxShadow='0 2px 7px '+color+'55';vline.style.background=color;vline.style.opacity='.45';
+  function show(i){
+    const H=node.clientHeight,leftPct=(pts[i][0]/VW)*100,topPx=(pts[i][1]/VH)*H;
+    vline.style.left=leftPct+'%';vline.style.display='block';
+    dot.style.left=leftPct+'%';dot.style.top=topPx+'px';dot.style.display='block';
+    tip.style.left=leftPct+'%';tip.style.top=(topPx-14)+'px';tip.style.display='block';
+    tip.innerHTML=`<b>${DAYS[i]}</b><span style="color:${color}">ROAS ${Math.round(data[i])}%</span>`;
+    let tx='-50%';if(leftPct<12)tx='-12%';else if(leftPct>88)tx='-88%';
+    tip.style.transform=`translate(${tx},-100%)`;
+  }
+  function hide(){[vline,dot,tip].forEach(e=>e.style.display='none');}
+  ov.addEventListener('mousemove',e=>{
+    const r=ov.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,plotL=PL/VW,plotR=1-PR/VW;
+    let f=(x-plotL)/(plotR-plotL);f=Math.max(0,Math.min(1,f));
+    show(Math.round(f*(n-1)));
+  });
+  ov.addEventListener('mouseleave',hide);
+  if(showLab){const lab=document.createElement('div');lab.className='ic-xlab';
+    lab.innerHTML=DAYS.map((d,i)=>i%2===0?`<span style="left:${(pts[i][0]/VW)*100}%">${d}</span>`:'').join('');
+    node.appendChild(lab);}
+}
+
+function miniRoas(node,data,color,goal){
+  const W=320,H=80,PL=3,PR=3,PT=10,PB=6,iw=W-PL-PR,ih=H-PT-PB;
+  const mx=Math.max(...data,goal)*1.06,mn=Math.min(...data)*0.9;
+  const X=i=>PL+iw*i/(data.length-1),Y=v=>PT+ih*(1-(v-mn)/(mx-mn));
+  const s=el('svg',{viewBox:`0 0 ${W} ${H}`,preserveAspectRatio:'none'});
+  if(goal!=null){const gy=Y(goal);s.appendChild(el('line',{x1:PL,x2:W-PR,y1:gy,y2:gy,stroke:'#0B62D6','stroke-width':1.2,'stroke-dasharray':'5 4','vector-effect':'non-scaling-stroke'}));}
+  const pts=data.map((v,i)=>[X(i),Y(v)]);
+  const id='mr'+Math.random().toString(36).slice(2,6),defs=el('defs',{}),lg=el('linearGradient',{id,x1:0,y1:0,x2:0,y2:1});
+  lg.appendChild(el('stop',{offset:'0%','stop-color':color,'stop-opacity':.20}));
+  lg.appendChild(el('stop',{offset:'100%','stop-color':color,'stop-opacity':0}));
+  defs.appendChild(lg);s.appendChild(defs);
+  s.appendChild(el('path',{d:`M ${pts[0][0]} ${PT+ih} `+pts.map(q=>`L ${q[0]} ${q[1]}`).join(' ')+` L ${pts[pts.length-1][0]} ${PT+ih} Z`,fill:`url(#${id})`}));
+  s.appendChild(el('path',{d:'M '+pts.map(q=>`${q[0]} ${q[1]}`).join(' L '),fill:'none',stroke:color,'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round','vector-effect':'non-scaling-stroke'}));
+  node.appendChild(s);
+}
+
+function nextTestSection(){
+  const H=[['가설 A','55-64 여성 소구 영상은 ROAS 300% 이상을 낸다.','260422 쿨리 · 신규 1개 · 7일 · 280,000원'],
+   ['가설 B','29.영상29의 후킹 구조 복제 소재도 CTR 3% · CPA 22,000원 이하를 낸다.','260430 · 파생 2개 · 7일'],
+   ['가설 C','소재 내 가격·배송 명시가 ATC→구매 전환율을 개선한다.','21.영상s 변형 1개 · A/B']];
+  const C=[['260430','28.영상z OFF 후 예산이 29.영상29로 몰렸는지 — 몰렸다면 단일 소재 의존도(현 85.5%)가 더 심화.'],
+   ['260422','22.영상t의 CPA가 28,000원을 넘었는지 (지출 1위 · CTR 1.4%로 취약)'],
+   ['260408','캠페인 중지 결정 후 절감액이 쿨리로 이동돼 전체 ROAS가 올랐는지'],
+   ['전체','ATC→구매 전환율 65% 회복 여부 (미회복 시 광고 외 요인 점검)'],
+   ['전체','CPM 30,000원 돌파 여부 (소재 노후 경보) · 55-64세 비중 증가 여부']];
+  return `<section><div class="shead"><div class="snum">8</div><h2>다음 테스트 · 체크리스트 <span class="hkr">· Next Tests & Checklist</span></h2></div>
+   <div class="g2">
+    <div class="nwc"><h3>다음 테스트 가설</h3><ol>${H.map(([a,b,c])=>`<li><b>${a}</b> — ${b}<br><span style="color:var(--tx3);font-size:11px">검증: ${c}</span></li>`).join('')}</ol></div>
+    <div class="nwc"><h3>다음 주 반드시 확인할 것</h3><div class="checklist">${C.map(([n,t],i)=>`<div class="ci2"><div class="cn2">${i+1}</div><div><b>${n}</b> — ${t}</div></div>`).join('')}</div></div>
+   </div></section>`;
+}
+
+function renderAll(){
+  const app=document.getElementById('app');
+  app.innerHTML = topCards() + summary()
+  + signalSection()
+  + nextWeekSection()
+  + detailSection();
+  CAMPS.forEach(c=>{const sc=document.getElementById('sig_'+c.id);if(sc)roasChart(sc,c.trend,261,c.color,{labels:false,grid:false});});
+  {const sp=document.getElementById('t_spark');if(sp)roasChart(sp,TREND.roas,261);}
+  {const ab=document.getElementById('a_bar');if(ab)barGroup(ab,AGEGENDER);}
+  {const hero=document.querySelector('.topcards .tc.hero');if(hero){const h=hero.offsetHeight;document.querySelectorAll('.topcards .tc').forEach(c=>{c.style.height=h+'px';});}}
+  bindDetail();
+}
+
+function renderCamp(c){
+  const app=document.getElementById('app');
+  app.innerHTML=`<section style="padding-top:24px"><div class="shead"><div class="snum">1</div><h2>${c.short} <span class="hkr">· Campaign KPI</span></h2><div class="note">${META.period} vs ${META.prev}</div></div>${campKPI(c)}</section>
+  <section><div class="shead"><div class="snum">2</div><h2>일별 ROAS 추이 <span class="hkr">· ROAS Trend</span></h2><div class="note">최근 14일</div></div>
+   <div class="card"><div class="chead"><div class="ctitle">${c.short}</div><div class="legend"><span><i style="background:${c.color}"></i>ROAS</span><span><i class="dash"></i>목표 261%</span></div></div><div id="ct"></div></div></section>
+  <section><div class="shead"><div class="snum">3</div><h2>소재 전환 기여도 <span class="hkr">· Creative Contribution</span></h2><div class="note">주간 구매 ${c.wk.pur}건</div></div>
+   <div class="card"><div class="g2" style="align-items:center"><div id="cd"></div><div id="cd2"></div></div>
+   ${ccBox([['','효율지수','<b>구매 비중 ÷ 지출 비중.</b> <span class="eff-g">1.0 초과</span> = 증액 후보, <span class="eff-r">1.0 미만</span> = 감액·OFF 후보.']])}</div></section>
+  <section><div class="shead"><div class="snum">4</div><h2>소재 성과 <span class="hkr">· Creative Dashboard</span></h2><div class="note">전 지표 주간 기준 · 헤더 클릭 = 정렬</div></div>${creativeTable(c)}</section>
+  <section><div class="shead"><div class="snum">5</div><h2>최고·최저 소재 <span class="hkr">· Best &amp; Worst Creative</span></h2></div>
+   <div class="g2">${bwCard(c.best)}${bwCard(c.worst)}</div></section>${footer()}`;
+  line(document.getElementById('ct'),c.trend,c.color,600,v=>Math.round(v)+'%',261);
+  const box=document.getElementById('cd');
+  donut(box,c.donut);
+  document.getElementById('cd2').appendChild(box.lastChild);
+  bindSort();
+}
+
+function footer(){
+  return `<footer>
+  <b>데이터 출처</b> · 03_Data/meta_ads_raw_data.xlsx · 수집 기간 ${META.rangeAll}<br>
+  <b>KPI 정의</b> · CPA = 지출 ÷ 구매 · ROAS = 구매 전환값 ÷ 지출 · CTR = 클릭 ÷ 노출 · CPC = 지출 ÷ 클릭 · 구매는 '결과 유형 = 웹사이트 구매'인 행의 결과값 합계<br>
+  <b>적용 규칙</b> · 목표 CPA 22,000원 / ROAS 261% · 소재 일예산 40,000~60,000원 · OFF Rule 1~5<br>
+  <b>갱신</b> · 매주 화요일 오전 10시 자동 실행 · 최신 Raw 데이터 기준으로 이 화면이 갱신됩니다.<br>
+  <span class="est">추정</span> 표시 항목은 예측치이며, 그 외 모든 수치는 Raw 데이터에서 직접 산출했습니다.
+  </footer>`;
+}
+
+function bindSort(){
+  document.querySelectorAll('th.srt').forEach(th=>{
+    th.onclick=()=>{
+      const c=th.dataset.c,i=+th.dataset.i,cur=SORT[c]||{col:2,dir:-1};
+      SORT[c]=(cur.col===i)?{col:i,dir:-cur.dir}:{col:i,dir:i===0?1:-1};
+      try{localStorage.setItem('metaSort',JSON.stringify(SORT));}catch(e){}
+      route();
+    };
+  });
+}
+
+/* ============ ROUTER ============ */
+let VIEW='all';
+function tabs(){
+  const t=document.getElementById('tabs');
+  t.innerHTML=`<button class="tab ${VIEW==='all'?'on':''}" data-v="all">전체</button>`
+   + BRANDS.map(b=>`<button class="tab ${VIEW===b.id?'on':''}" data-v="${b.id}"><span class="dt" style="background:${b.color}"></span>${b.name}</button>`).join('');
+  t.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{VIEW=b.dataset.v;try{localStorage.setItem('metaView',VIEW);}catch(e){}route();window.scrollTo({top:0,behavior:'smooth'});});
+}
+function brandKPI(b){
+  const cards=b.kpi.map(([l,v,u,d,c])=>`<div class="kpi"><div class="t"><span>${l}</span></div><div class="v">${v}<small>${u}</small></div><div class="d ${c}">${d} <span class="mut">vs 지난주</span></div></div>`).join('');
+  return `<div class="kpis" style="grid-template-columns:repeat(5,1fr)">${cards}</div>
+   <div class="cum" style="margin-top:14px"><div class="cum-l">누적 · 전 기간</div>
+    <div class="cum-i"><span>누적 지출</span><b>${b.cum.spend}</b></div>
+    <div class="cum-i"><span>누적 구매</span><b>${b.cum.pur}</b></div>
+    <div class="cum-i"><span>누적 전환값</span><b>${b.cum.rev}</b></div>
+    <div class="cum-i"><span>평균 CPA</span><b>${b.cum.cpa}</b></div>
+    <div class="cum-i"><span>평균 ROAS</span><b>${b.cum.roas}</b></div></div>
+   <div style="font-size:11.5px;color:var(--tx3);margin:11px 2px 0;font-weight:500">구성 · ${b.split}</div>
+   ${ccBox(b.verdict)}`;
+}
+
+function renderBrand(b){
+  const app=document.getElementById('app');
+  const camps=b.camps.map(id=>CAMPS.find(c=>c.id===id));
+  let html=`<section style="padding-top:8px"><div class="shead"><div class="snum" style="background:${b.color}1a;color:${b.color}">B</div><h2>${b.name} <span class="hkr">· 브랜드 통합 성과 (${camps.length}개 캠페인)</span></h2><div class="note">${META.period}</div></div>${brandKPI(b)}</section>`;
+  camps.forEach((c,idx)=>{
+    html+=`<section><div class="shead"><div class="snum" style="background:${c.color}1a;color:${c.color}">${idx+1}</div><h2>${c.type} <span class="hkr">· ${c.name}</span></h2><div class="note">캠페인 상세</div></div>
+     ${campKPI(c)}
+     <div class="g2">
+      <div class="card"><div class="chead"><div class="ctitle">ROAS 흐름 (14일)</div><div class="legend"><span><i style="background:${c.color}"></i>ROAS</span><span><i class="dash"></i>목표 261%</span></div></div><div id="ct_${c.id}" class="ichart"></div></div>
+      <div class="card"><div class="chead"><div class="ctitle">소재별 구매 랭킹</div><div class="legend"><span>주간 구매 ${c.wk.pur}건</span></div></div><div id="dn_${c.id}"></div>${ccBox([['','효율지수','<b>구매 비중 ÷ 지출 비중.</b> <span class="eff-g">1.0↑</span> 증액 후보 / <span class="eff-r">0.7↓</span> OFF 후보.']])}</div>
+     </div>
+     <div style="margin-top:14px">${creativeTable(c)}</div>
+     <div class="g2" style="margin-top:14px">${bwCard(c.best)}${bwCard(c.worst)}</div>
+    </section>`;
+  });
+  html+=footer();
+  app.innerHTML=html;
+  camps.forEach(c=>{
+    roasChart(document.getElementById('ct_'+c.id),c.trend,261,c.color);
+    donut(document.getElementById('dn_'+c.id),c.donut);
+  });
+  bindSort();
+}
+
+function route(){
+  if(VIEW!=='all' && !BRANDS.some(b=>b.id===VIEW))VIEW='all';
+  tabs();
+  if(VIEW==='all')renderAll();
+  else renderBrand(BRANDS.find(b=>b.id===VIEW));
+}
+try{const v=localStorage.getItem('metaView'); if(v)VIEW=v;
+    const s=localStorage.getItem('metaSort'); if(s)Object.assign(SORT,JSON.parse(s));}catch(e){}
+document.getElementById('p1').textContent=META.period.slice(5);
+document.getElementById('p2').textContent=META.prev.slice(5);
+document.getElementById('upd').textContent=META.dataEnd;
+route();
+
+/* ================= 검색 ================= */
+(function(){
+  function clearHits(){
+    document.querySelectorAll('mark.hit').forEach(m=>{const t=document.createTextNode(m.textContent);m.replaceWith(t);});
+    document.querySelectorAll('.hitrow').forEach(e=>e.classList.remove('hitrow'));
+  }
+  function hi(node,re){
+    for(const ch of [...node.childNodes]){
+      if(ch.nodeType===3){
+        const t=ch.nodeValue; if(!re.test(t))continue;
+        const span=document.createElement('span');
+        span.innerHTML=t.replace(re,m=>`<mark class="hit">${m}</mark>`);
+        ch.replaceWith(...span.childNodes);
+      } else if(ch.nodeType===1 && !['MARK','SCRIPT','STYLE','SVG','INPUT'].includes(ch.tagName)){
+        hi(ch,re);
+      }
+    }
+  }
+  function run(q){
+    clearHits();
+    const qn=document.getElementById('qn');
+    q=(q||'').trim();
+    if(q.length<1){qn.textContent='';return;}
+    const esc=q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const re=new RegExp(esc,'gi');
+    const scope=document.getElementById('app');
+    hi(scope,re);
+    const marks=[...scope.querySelectorAll('mark.hit')];
+    marks.forEach(m=>{
+      const row=m.closest('tr, .bwc, .lg-r, .cmp, .kpi, .sig');
+      if(row)row.classList.add('hitrow');
+    });
+    qn.textContent = marks.length? marks.length+'건' : '결과 없음';
+    if(marks.length){
+      const first=marks[0].closest('section, .cmp, .card')||marks[0];
+      first.scrollIntoView({behavior:'smooth',block:'center'});
+      first.classList.add('flash'); setTimeout(()=>first.classList.remove('flash'),1400);
+    }
+  }
+  let t;
+  document.addEventListener('input',e=>{
+    if(e.target.id!=='q')return;
+    clearTimeout(t); const v=e.target.value; t=setTimeout(()=>run(v),250);
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.target.id==='q' && e.key==='Escape'){e.target.value='';clearHits();document.getElementById('qn').textContent='';}
+  });
+})();
+
+</script>
+</body>
+</html>
