@@ -221,6 +221,7 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .tc .tv small{font-size:12px;font-weight:700;color:var(--tx3);margin-left:2px}
 .tc .ts{font-size:11px;color:var(--tx2);font-weight:500;margin-top:10px}
 .tc .ts.down{color:var(--red);font-weight:600}
+.tc .tdelta{font-size:10px;color:var(--tx3);font-weight:600;margin-top:6px}
 .tc.hero{background:#fff;color:var(--tx)}
 .tc.hero .tl{color:var(--tx3)}
 /* WEEKLY SUMMARY cards+graph */
@@ -464,7 +465,7 @@ h2{font-size:var(--fz-sec);font-weight:700}
     <div class="brandbox"><div class="logo">M</div><div class="bname">Meta Ads<span>COOL LAB</span></div></div>
     <div class="navlabel">Dashboard</div>
     <nav class="in" id="tabs"></nav>
-    <div class="sidefoot"><b>매주 화요일 10:00</b><br>최신 데이터로 자동 갱신</div>
+    <div class="sidefoot"><b>매주 화요일 09:30</b><br>최신 데이터로 자동 갱신</div>
   </aside>
   <div class="main">
     <header class="topbar">
@@ -1017,14 +1018,14 @@ function barGroup(node,data){
 }
 
 function topCards(){
-  const C=[['누적 광고비','38,604,813','원','판매 캠페인 97.4%',''],
-   ['누적 구매','1,432','건','일평균 13.8건',''],
-   ['총 평균 CPA','26,959','원','목표 22,000원 · +23%','down'],
-   ['총 평균 ROAS','212.1','%','목표 261% · 달성 81%','down']];
+  const C=[['누적 광고비','38,604,813','원','판매 캠페인 97.4%','','지난주 누적 대비 ▲11.0%'],
+   ['누적 구매','1,432','건','일평균 13.8건','','지난주 누적 대비 ▲140건'],
+   ['총 평균 CPA','26,959','원','목표 22,000원 · +23%','down','지난주 누적 대비 ▲0.1%'],
+   ['총 평균 ROAS','212.1','%','목표 261% · 달성 81%','down','지난주 누적 대비 ▼1.1%p']];
   return `<section style="padding-top:6px"><div class="shead"><div class="snum">₩</div><h2>누적 성과 <span class="hkr">· Lifetime Overview</span></h2><div class="note">${META.rangeAll}</div></div>
    <div class="topcards">
-    <div class="tc hero"><div class="tl">총 누적 매출</div><div class="tv">81,894,180<small>원</small></div><div class="ts"><span class="tbadge">▲ 지난주 대비 +10.4%</span></div></div>
-    ${C.map(([l,v,u,sb,c])=>`<div class="tc"><div class="tl">${l}</div><div class="tv">${v}<small>${u}</small></div><div class="ts ${c}">${sb}</div></div>`).join('')}
+    <div class="tc hero"><div class="tl">총 누적 매출</div><div class="tv">81,894,180<small>원</small></div><div class="ts"><span class="tbadge">▲ 지난주 대비 +10.4%</span></div><div class="tdelta" style="color:rgba(255,255,255,.75)">지난주 누적 74,170,245원</div></div>
+    ${C.map(([l,v,u,sb,c,dl])=>`<div class="tc"><div class="tl">${l}</div><div class="tv">${v}<small>${u}</small></div><div class="ts ${c}">${sb}</div><div class="tdelta">${dl}</div></div>`).join('')}
    </div></section>`;
 }
 
@@ -1174,7 +1175,7 @@ function footer(){
   <b>데이터 출처</b> · 03_Data/meta_ads_raw_data.xlsx · 수집 기간 ${META.rangeAll}<br>
   <b>KPI 정의</b> · CPA = 지출 ÷ 구매 · ROAS = 구매 전환값 ÷ 지출 · CTR = 클릭 ÷ 노출 · CPC = 지출 ÷ 클릭 · 구매는 '결과 유형 = 웹사이트 구매'인 행의 결과값 합계<br>
   <b>적용 규칙</b> · 목표 CPA 22,000원 / ROAS 261% · 소재 일예산 40,000~60,000원 · OFF Rule 1~5<br>
-  <b>갱신</b> · 매주 화요일 오전 10시 자동 실행 · 최신 Raw 데이터 기준으로 이 화면이 갱신됩니다.<br>
+  <b>갱신</b> · 매주 화요일 오전 9시 30분 자동 실행 · 최신 Raw 데이터 기준으로 이 화면이 갱신됩니다.<br>
   <span class="est">추정</span> 표시 항목은 예측치이며, 그 외 모든 수치는 Raw 데이터에서 직접 산출했습니다.
   </footer>`;
 }
