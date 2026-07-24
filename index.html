@@ -8,10 +8,12 @@
  color-scheme:light;
  --bg:#ffffff;--canvas:#FBFCFE;--soft:#F3F7FC;--line:#E4EBF3;--line2:#EFF4F9;
  --tx:#12263F;--tx2:#5B6B7E;--tx3:#93A2B4;
- --primary:#06A6FF;--primary-weak:#E6F6FF;--primary-bd:#BCE6FF;
- --blue:#06A6FF;--green:#0891D6;--yellow:#3E92E0;--orange:#2E7FD6;--red:#0B4C99;--purple:#2F6FE0;--cyan:#06A6FF;
- --gbg:#E6F5FF;--gbd:#BFE4FF;--rbg:#EAF0F8;--rbd:#C6D6EC;--ybg:#EBF4FF;--ybd:#C9E4FF;
- --bbg:#E6F2FF;--bbd:#BFE0FF;--obg:#EBF3FF;--obd:#CCE4FA;--pbg:#EDF1FE;--pbd:#D6E0FB;
+ --primary:#17191D;--primary-weak:#F0F1F3;--primary-bd:#D9DCE1;
+ --blue:#5B6B7E;--green:#5B6B7E;--yellow:#5B6B7E;--orange:#5B6B7E;--red:#5B6B7E;--purple:#5B6B7E;--cyan:#5B6B7E;
+ --gbg:#F1F3F5;--gbd:#DEE2E7;--rbg:#F1F3F5;--rbd:#DEE2E7;--ybg:#F1F3F5;--ybd:#DEE2E7;
+ --bbg:#F1F3F5;--bbd:#DEE2E7;--obg:#F1F3F5;--obd:#DEE2E7;--pbg:#F1F3F5;--pbd:#DEE2E7;
+ --up:#F0576A;--up-bg:#FFEEF0;--up-bd:#FBD3D9;--down:#4F92E6;--down-bg:#EBF3FE;--down-bd:#CFE4FB;
+ --coolli:#06A6FF;--chika:#E8AE33;--chika-bg:#FDF3DC;--coolpick:#2BC48A;--coolpick-bg:#E4F7EF;
  --sh:0 1px 2px rgba(16,42,70,.03),0 1px 2px rgba(16,42,70,.04);
  --sh2:0 4px 14px rgba(16,42,70,.08),0 2px 6px rgba(16,42,70,.05);
  --r:16px;--sp:16px;
@@ -28,7 +30,7 @@ body{color:var(--tx);font-family:"Inter","Pretendard",-apple-system,BlinkMacSyst
 .layout{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
 .sidebar{position:sticky;top:0;height:100vh;background:var(--bg);border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:4px;z-index:30}
 .brandbox{display:flex;align-items:center;gap:11px;padding:6px 10px 18px}
-.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#06A6FF,#3EC5FF);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;box-shadow:0 4px 12px rgba(6,166,255,.30);flex:0 0 36px}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#2A2D33,#4A4E56);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;box-shadow:0 4px 12px rgba(23,25,29,.28);flex:0 0 36px}
 .bname{font-size:14.5px;font-weight:700;line-height:1.2;display:flex;flex-direction:column}
 .bname span{font-size:11px;color:var(--tx3);font-weight:500;margin-top:1px}
 .navlabel{font-size:10.5px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;padding:8px 12px 6px}
@@ -62,7 +64,7 @@ tr.hitrow>td,.bwc.hitrow,.lg-r.hitrow{background:#fffbeb !important}
 .iconbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--tx2);cursor:pointer;transition:.15s}
 .iconbtn:hover{background:var(--soft);color:var(--tx);border-color:var(--tx3)}
 .profile{display:flex;align-items:center;gap:9px;padding:4px 10px 4px 4px;border:1px solid var(--line);border-radius:30px;background:var(--bg)}
-.profile .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#06A6FF,#3EC5FF);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.profile .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#2A2D33,#4A4E56);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .profile .pn{font-size:12.5px;font-weight:650}
 
 /* ===== CONTENT ===== */
@@ -119,8 +121,8 @@ h2{font-size:16px;font-weight:700;letter-spacing:-.015em}
 .sigs{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
 .sig{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
 .sig .top{display:flex;align-items:center;gap:11px;padding:15px 18px;border-bottom:1px solid var(--line2)}
-.sig .top .bar{width:4px;height:30px;border-radius:3px}
-.sig.c1 .top .bar{background:var(--blue)}.sig.c2 .top .bar{background:var(--purple)}.sig.c3 .top .bar{background:var(--red)}.sig.c4 .top .bar{background:#5AB0F0}
+.sig .top .bar{width:4px;height:30px;border-radius:3px;background:var(--primary)}
+.sig.c1 .top .bar{background:var(--primary)}.sig.c2 .top .bar{background:var(--primary)}.sig.c3 .top .bar{background:var(--primary)}.sig.c4 .top .bar{background:var(--primary)}
 .sig .top .nm{font-size:14.5px;font-weight:700;flex:1}
 .sig .bd{padding:22px}
 .sig .big{display:flex;gap:12px;margin-bottom:18px}
@@ -136,9 +138,9 @@ h2{font-size:16px;font-weight:700;letter-spacing:-.015em}
 .sig .sub2 b{color:var(--tx);font-weight:700}
 .sig .vd{font-size:12.5px;line-height:1.65;padding:15px 16px;border-radius:12px}
 .sig .vd .ac{display:block;margin-top:6px;font-weight:700}
-.sig.win .vd{background:var(--gbg);color:#0891D6}
-.sig.mid .vd{background:var(--bbg);color:#2F6FE0}
-.sig.bad .vd{background:var(--rbg);color:#0B4C99}
+.sig.win .vd{background:var(--gbg);color:#3A3F47}
+.sig.mid .vd{background:var(--bbg);color:#5B6B7E}
+.sig.bad .vd{background:var(--rbg);color:#3A3F47}
 .sig .vd b{font-weight:700}
 
 /* CAMPAIGN BLOCK */
@@ -149,8 +151,8 @@ h2{font-size:16px;font-weight:700;letter-spacing:-.015em}
 .cmp-h .cname{font-size:14.5px;font-weight:700;letter-spacing:-.015em}
 .cmp-h .cmeta{font-size:11.5px;color:var(--tx3);margin-top:3px}
 .cmp-b{padding:18px 20px}
-.c1 .bar{background:var(--blue)}.c2 .bar{background:var(--purple)}.c3 .bar{background:var(--red)}.c4 .bar{background:#5AB0F0}
-.c1 .cname{color:var(--blue)}.c2 .cname{color:var(--purple)}.c3 .cname{color:var(--red)}.c4 .cname{color:#5AB0F0}
+.c1 .bar{background:var(--primary)}.c2 .bar{background:var(--primary)}.c3 .bar{background:var(--primary)}.c4 .bar{background:var(--primary)}
+.c1 .cname{color:var(--tx)}.c2 .cname{color:var(--tx)}.c3 .cname{color:var(--tx)}.c4 .cname{color:var(--tx)}
 .ckpi{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:16px}
 .ck{background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:12px 13px}
 .ck .l{font-size:10.5px;color:var(--tx3);font-weight:600;margin-bottom:5px;display:flex;justify-content:space-between}
@@ -163,7 +165,8 @@ h2{font-size:16px;font-weight:700;letter-spacing:-.015em}
 .cum-i span{font-size:10px;color:var(--tx3);font-weight:600}
 .cum-i b{font-size:14px;font-weight:800;letter-spacing:-.02em;margin-top:2px}
 .cum-i .cd{display:block;font-size:9px;font-weight:700;margin-top:3px;font-style:normal;line-height:1.3}
-.cd.up{color:var(--green)}.cd.down{color:var(--red)}.cd.mut{color:var(--tx3)}
+.cd.up{color:var(--tx2)}.cd.down{color:var(--tx2)}.cd.mut{color:var(--tx3)}
+.dv.u{color:var(--up);font-weight:700}.dv.d{color:var(--down);font-weight:700}.dv.z{color:var(--tx3)}
 
 /* TABLE */
 .tw{overflow-x:auto;margin:0 -4px}
@@ -240,10 +243,10 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .ic-svg{position:absolute;inset:0;width:100%;height:100%}
 .ic-ov{position:absolute;inset:0;cursor:crosshair}
 .ic-vline{position:absolute;top:4px;bottom:18px;width:1px;background:rgba(6,166,255,.4);display:none}
-.ic-dot{position:absolute;width:11px;height:11px;border-radius:50%;background:#fff;border:3px solid #06A6FF;transform:translate(-50%,-50%);display:none;box-shadow:0 2px 7px rgba(6,166,255,.45)}
+.ic-dot{position:absolute;width:11px;height:11px;border-radius:50%;background:#fff;border:3px solid var(--primary);transform:translate(-50%,-50%);display:none;box-shadow:0 2px 7px rgba(23,25,29,.35)}
 .ic-tip{position:absolute;display:none;background:#fff;border:1px solid var(--line);box-shadow:var(--sh2);border-radius:10px;padding:8px 11px;font-size:11.5px;white-space:nowrap;pointer-events:none;z-index:5}
 .ic-tip b{display:block;color:var(--tx);font-weight:700;margin-bottom:2px}
-.ic-tip span{color:#06A6FF;font-weight:700}
+.ic-tip span{color:var(--tx);font-weight:700}
 .ic-xlab{position:absolute;left:0;right:0;bottom:2px;height:14px}
 .ic-xlab span{position:absolute;transform:translateX(-50%);font-size:9.5px;color:var(--tx3);font-weight:600}
 .chips2{display:flex;gap:8px;flex-wrap:wrap}
@@ -335,6 +338,19 @@ svg{display:block;width:100%;height:auto;overflow:visible}
 .dtog{margin:2px 0 16px;display:flex;justify-content:center}
 .dtog button{background:var(--bg);border:1px solid var(--line);border-radius:24px;padding:10px 22px;font-size:12.5px;font-weight:650;color:var(--tx2);cursor:pointer;font-family:inherit;box-shadow:var(--sh);transition:.15s}
 .dtog button:hover{color:var(--primary);border-color:var(--primary-bd);background:var(--primary-weak)}
+.cdtog{display:flex;margin:0 0 10px}
+.cdtog button{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:9px 16px;font-size:12px;font-weight:650;color:var(--tx2);cursor:pointer;font-family:inherit;transition:.15s;display:inline-flex;align-items:center;gap:8px}
+.cdtog button:hover{color:var(--primary);border-color:var(--primary-bd);background:var(--primary-weak)}
+.cdet-n{font-size:10.5px;font-weight:700;color:var(--tx3);background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:2px 8px}
+.cflow{margin-top:14px}
+.cf-head{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:16px;padding:4px 4px 9px;font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--line)}
+.cf-row{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:16px;align-items:center;padding:11px 4px;border-bottom:1px solid var(--line2)}
+.cf-row:last-child{border-bottom:none}
+.cf-nm{font-size:12px;font-weight:650;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cf-c{min-width:0}
+.cf-hd{font-size:10px;color:var(--tx3);font-weight:600;margin-bottom:5px;display:flex;justify-content:space-between;gap:6px}
+.cf-hd b{color:var(--tx2);font-weight:700;white-space:nowrap}
+.msvg{width:100%;height:38px;display:block}
 .dlabel{text-align:center;font-size:10.5px;color:var(--tx3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:26px 0 6px;position:relative}
 .dlabel::before,.dlabel::after{content:"";position:absolute;top:50%;width:28%;height:1px;background:var(--line)}
 .dlabel::before{left:4%}.dlabel::after{right:4%}
@@ -440,7 +456,7 @@ h2{font-size:var(--fz-sec);font-weight:700}
 
 /* Color System: 상태색 파스텔 (신호등·판정) */
 .sig.win .vd{color:var(--green)}.sig.mid .vd{color:var(--blue)}.sig.bad .vd{color:var(--red)}
-.b-stable{background:var(--bbg);color:#0284C7;border-color:var(--bbd)}
+.b-stable{background:var(--bbg);color:#5B6B7E;border-color:var(--bbd)}
 .badge{border-radius:8px}
 .tc.hero{background:var(--primary);border-color:var(--primary);display:block;text-align:left}
 .tc.hero .tl{color:rgba(255,255,255,.85);white-space:nowrap}
@@ -459,6 +475,14 @@ h2{font-size:var(--fz-sec);font-weight:700}
 @media(max-width:1440px){.topcards{grid-template-columns:1fr 1fr 1fr}.kpis{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:1100px){.topcards{grid-template-columns:1fr 1fr}}
 @media(max-width:1200px){.acards{grid-template-columns:repeat(2,1fr)}}
+/* ===== SECTION NAV ===== */
+.secnav{position:sticky;top:52px;z-index:19;display:flex;gap:6px;overflow-x:auto;padding:8px 28px;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(10px);-webkit-backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line)}
+.secnav::-webkit-scrollbar{height:0}
+.snav{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;padding:5px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-family:inherit;font-size:11px;font-weight:600;color:var(--tx2);cursor:pointer;white-space:nowrap;transition:.15s;line-height:1}
+.snav:hover{background:var(--soft);color:var(--tx);border-color:var(--tx3)}
+.snav.on{background:var(--primary-weak);color:var(--primary);border-color:var(--primary-bd)}
+.snav-n{font-size:9px;font-weight:800;background:var(--soft);color:var(--tx3);border-radius:5px;padding:1px 5px}
+.snav.on .snav-n{background:#fff;color:var(--primary)}
 </style>
 </head>
 <body>
@@ -482,6 +506,7 @@ h2{font-size:var(--fz-sec);font-weight:700}
         <div class="profile"><div class="av">CL</div><div class="pn">COOL LAB</div></div>
       </div>
     </header>
+    <nav class="secnav" id="secnav"></nav>
     <main class="content" id="app"></main>
   </div>
 </div>
@@ -543,7 +568,7 @@ const CAMPS=[
       ['액션','<b>즉시 OFF.</b> 급등 소재 확대는 3일 관찰 후 판단하는 원칙 필요.']]},
  trend:[387,179,197,247,298,266,271,361,199,97,209,175,301,240]},
 
-{id:'c2',key:'260430',type:'신규 TEST 캠페인',hero:{n:'29.영상29',copy:'캠페인 구매의 98%를 담당하는 단일 주력 — 의존도 위험'},name:'260430_ASC_판매_쿨리_신규소재 test',short:'260430 신규소재test',color:'#2F6FE0',cls:'c2',
+{id:'c2',key:'260430',type:'신규 TEST 캠페인',hero:{n:'29.영상29',copy:'캠페인 구매의 98%를 담당하는 단일 주력 — 의존도 위험'},name:'260430_ASC_판매_쿨리_신규소재 test',short:'260430 신규소재test',color:'#3B8DE6',cls:'c2',
  badge:'<span class="badge b-stable">● Stable</span><span class="badge b-off">단일 소재 의존</span>',
  meta:'지출 비중 33.6% · 활성 소재 5개 · 운영 81일차',
  wk:{spend:1282006,pur:48,rev:2399815,cpa:26708,roas:187.2,ctr:3.1,cpc:1589,dcpa:-0.2,droas:-3.0,dpur:-12.7,dspend:-12.9,drev:-14.3,dctr:0.5,dcpc:-13.9,cpaSt:'●',roasSt:'●'},
@@ -563,7 +588,7 @@ const CAMPS=[
        ['b','근거','28.영상z OFF는 잘 실행됨. 신규 시딩영상3이 CTR 5.6%로 유망하나 아직 5일차.'],
        ['r','액션','시딩영상3 확대 + 29 파생 2종 투입해 <b>단일 의존 완화.</b>']],
  donut:{total:48,items:[
-   {n:'29.영상29',p:47,sp:98.0,c:'#2F6FE0'},{n:'32.시딩영상3',p:1,sp:1.3,c:'#5AB0F0'},
+   {n:'29.영상29',p:47,sp:98.0,c:'#5B6B7E'},{n:'32.시딩영상3',p:1,sp:1.3,c:'#5AB0F0'},
    {n:'기타 3개 (구매 0)',p:0,sp:0.7,c:'#e5e7eb'}]},
  best:{kind:'best',n:'29.영상29',s:'운영 22일 · 캠페인 구매 98% 담당',
    m:[['지출','1,256,890원',''],['구매','47건',''],['CPA','26,742원',''],['ROAS','187.8%',''],['CTR','3.1%','pos']],
@@ -577,7 +602,7 @@ const CAMPS=[
       ['액션','<b>ON 유지하며 학습 관찰</b> (소재 예산은 메타 자동). 성과 지속 시 29.영상29 의존 완화 후보.']]},
  trend:[156,0,112,110,282,306,306,159,382,180,134,125,209,142]},
 
-{id:'c3',key:'260408',type:'런칭 캠페인',hero:{n:'10.맘카페',copy:'지난주 붕괴했다가 회복 — CPA 84,974→26,170원'},name:'260408_ASC_판매_치카프렌즈 런칭',short:'260408 치카프렌즈',color:'#0B4C99',cls:'c3',
+{id:'c3',key:'260408',type:'런칭 캠페인',hero:{n:'10.맘카페',copy:'지난주 붕괴했다가 회복 — CPA 84,974→26,170원'},name:'260408_ASC_판매_치카프렌즈 런칭',short:'260408 치카프렌즈',color:'#E8AE33',cls:'c3',
  badge:'<span class="badge b-scale">● 개선</span><span class="badge b-stable">회복 확인 중</span>',
  meta:'지출 비중 7.0% · 활성 소재 6개 · 운영 103일차',
  wk:{spend:269284,pur:10,rev:423500,cpa:26928,roas:157.3,ctr:1.8,cpc:1749,dcpa:-63.5,droas:106.4,dpur:150.0,dspend:-8.8,drev:182.1,dctr:0.1,dcpc:-28.9,cpaSt:'●',roasSt:'●'},
@@ -611,7 +636,7 @@ const CAMPS=[
       ['액션','<b>이 소재만 OFF</b> (비밀링크 포맷 자체는 유지).']]},
  trend:[0,164,0,98,0,76,0,192,109,111,373,232,84,0]},
 
-{id:'c4',key:'260715',type:'신규 런칭 캠페인',hero:{n:'4.영상3',copy:'신규 쿨픽C100의 구매를 전담하는 유일 소재 (ROAS 194%)'},name:'260715_ASC_판매_쿨픽C100',short:'260715 쿨픽C100',color:'#5AB0F0',cls:'c4',
+{id:'c4',key:'260715',type:'신규 런칭 캠페인',hero:{n:'4.영상3',copy:'신규 쿨픽C100의 구매를 전담하는 유일 소재 (ROAS 194%)'},name:'260715_ASC_판매_쿨픽C100',short:'260715 쿨픽C100',color:'#2BC48A',cls:'c4',
  badge:'<span class="badge b-watch">● 신규 · 학습</span>',
  meta:'지출 비중 7.6% · 활성 소재 4개 · 운영 6일차 (신규)',
  wk:{spend:290322,pur:7,rev:446620,cpa:41475,roas:153.8,ctr:1.0,cpc:2503,dcpa:0,droas:0,dpur:0,dspend:0,drev:0,dctr:0,dcpc:0,cpaSt:'●',roasSt:'●'},
@@ -652,13 +677,13 @@ const BRANDS=[
   verdict:[['r','결론','<b>두 캠페인 모두 하락.</b> 브랜드 ROAS 235% → <b>210%</b>, 구매 149 → 123건. 주력 소재(11.영상h·29.영상29)가 동반 약화.'],
    ['b','근거','22.영상t·시딩영상3은 개선됐으나 주력 하락을 못 메움. 지난주 확대한 21.영상s가 471→124%로 급락.'],
    ['r','방향','<b>부진 소재 OFF + 대체 Hero 확보.</b> 22.영상t·시딩영상3 중심으로 재편, 급등 소재는 3일 관찰 후.']]},
- {id:'b2',name:'치카프렌즈',color:'#0B4C99',camps:['c3'],split:'런칭 캠페인 100%',
+ {id:'b2',name:'치카프렌즈',color:'#E8AE33',camps:['c3'],split:'런칭 캠페인 100%',
   kpi:[['지출','269,284','원','▼8.8%','mut'],['구매','10','건','▲150.0%','up'],['구매 전환값','423,500','원','▲182.1%','up'],['구매당 비용','26,928','원','▼63.5%','up'],['구매 ROAS','157.3','%','▲106.4%p','up']],
   cum:{spend:'4,193,311원',pur:'123건',rev:'6,021,835원',cpa:'34,092원',roas:'143.6%',dspend:'▲6.9%',dpur:'▲10건',drev:'▲7.6%',dcpa:'▼1.8%',dcpaC:'up',droas:'▲0.9%p',droasC:'up'},
   verdict:[['g','결론','<b>극적 반등.</b> 지난주 ROAS 50.9% → <b>157.3%</b>. 10.맘카페 CPA 84,974 → 26,170원 회복.'],
    ['b','근거','지난주 OFF 검토했던 10.맘카페를 유지한 게 정답 — 노후가 아니라 일시 부진이었음.'],
    ['g','방향','회복 지속 여부 1주 확인, 단일 소재 의존이라 신규 소재 병행 준비.']]},
- {id:'b3',name:'쿨픽',color:'#5AB0F0',camps:['c4'],split:'신규 런칭 캠페인 100% (7/15~)',
+ {id:'b3',name:'쿨픽',color:'#2BC48A',camps:['c4'],split:'신규 런칭 캠페인 100% (7/15~)',
   kpi:[['지출','290,322','원','신규','mut'],['구매','7','건','신규','mut'],['구매 전환값','446,620','원','신규','mut'],['구매당 비용','41,475','원','신규','down'],['구매 ROAS','153.8','%','신규','mut']],
   cum:{spend:'290,322원',pur:'7건',rev:'446,620원',cpa:'41,475원',roas:'153.8%',dspend:'신규',dpur:'신규',drev:'신규',dcpa:'신규',dcpaC:'mut',droas:'신규',droasC:'mut'},
   verdict:[['b','결론','<b>신규 브랜드 런칭 6일차 · 학습 단계.</b> ROAS 153.8% · CPA 41,475원.'],
@@ -667,6 +692,7 @@ const BRANDS=[
 ];
 
 const DAYS=['07/07','07/08','07/09','07/10','07/11','07/12','07/13','07/14','07/15','07/16','07/17','07/18','07/19','07/20'];
+const CFLOW={"c3|10.맘카페":{r:[0.0,101.4,0.0,130.4,0.0,80.6,0.0,200.1,116.1,118.5,378.8,234.5,84.4,0.0],p:[0,1,0,1,0,1,0,2,1,1,3,2,1,0]},"c3|18.맘카페2_비밀링크":{r:[0,535.4,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0,0.0],p:[0,1,0,0,0,0,0,0,0,0,0,0,0,0]},"c1|10.영상b - 사본":{r:[869.8,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4226.0],p:[1,0,0,0,0,0,0,0,0,0,0,0,0,1]},"c1|11.영상h - 사본":{r:[412.2,238.4,175.5,348.8,308.0,260.8,234.0,326.2,197.8,129.9,176.7,128.4,342.4,153.4],p:[10,3,4,8,4,5,7,9,6,4,6,5,8,4]},"c1|14.영상o - 사본":{r:[0.0,0.0,373.5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],p:[0,0,1,0,0,0,0,0,0,0,0,0,0,0]},"c1|21.영상s - 사본":{r:[711.7,316.9,335.7,430.4,386.7,390.7,523.1,544.6,209.7,0.0,267.6,0.0,0.0,0.0],p:[4,1,1,2,1,1,4,2,1,0,1,0,0,0]},"c1|22.영상t - 사본":{r:[338.6,200.8,165.6,128.6,290.9,267.1,203.8,418.6,241.2,54.2,326.6,313.8,370.7,272.8],p:[5,4,4,2,9,7,5,7,3,1,3,5,5,4]},"c1|5.영상e":{r:[0.0,0.0,0.0,0.0,0.0,0.0,2376.8,0.0,0.0,0.0,0.0,0.0,0.0,0.0],p:[0,0,0,0,0,0,1,0,0,0,0,0,0,0]},"c2|28.영상z":{r:[186.0,0.0,91.3,135.7,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0],p:[4,0,2,2,0,0,0,0,0,0,0,0,0,0]},"c2|29.영상29":{r:[137.1,0.0,165.5,91.2,376.3,324.5,313.9,162.9,400.9,165.3,134.4,126.0,209.8,143.2],p:[3,0,2,2,11,16,13,6,12,5,6,6,7,5]},"c2|32.시딩영상3":{r:[0,0,0,0,0,0,0,0.0,0.0,595.2,0.0,0.0,0,0],p:[0,0,0,0,0,0,0,0,0,1,0,0,0,0]},"c4|4.영상3":{r:[0,0,0,0,0,0,0,0,889.0,0.0,0.0,142.7,272.1,112.3],p:[0,0,0,0,0,0,0,0,2,0,0,1,3,1]}};
 const TREND={roas:[273.0,111.0,153.7,186.5,269.0,266.8,263.5,273.8,275.1,118.5,174.8,158.3,251.8,179.0],
  cpa:[21074,53362,36022,31124,22934,22266,19659,18578,19976,43470,32631,29747,23233,38242],
  spend:[568985,533624,504315,529113,573340,667983,589771,483019,499397,521646,619992,565196,557582,573626],
@@ -714,7 +740,7 @@ const won=v=>v==null?'—':v.toLocaleString('ko-KR')+'원';
 const NS='http://www.w3.org/2000/svg';
 const el=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
 const BADGE={scale:'<span class="badge b-scale">● Scale</span>',stable:'<span class="badge b-stable">● Stable</span>',watch:'<span class="badge b-watch">● Watch</span>',off:'<span class="badge b-off">● OFF</span>'};
-const sgn=(v,inv)=>{const good=inv?v<0:v>0;return `<span class="${v===0?'mut':(good?'up':'down')}">${v>0?'▲':'▼'} ${Math.abs(v).toFixed(1)}</span>`;};
+const sgn=(v,inv,unit)=>{const dir=v>0?'u':(v<0?'d':'z');const ar=v>0?'▲':(v<0?'▼':'');return `<span class="dv ${dir}">${ar} ${Math.abs(v).toFixed(1)}${unit||''}</span>`;};
 const kbox=(k,t)=>`<span class="k ${k}">${t}</span>`;
 const ccBox=rows=>`<div class="cc">${rows.map(([k,t,h])=>`<div>${kbox(k,t)}${h}</div>`).join('')}</div>`;
 
@@ -777,7 +803,7 @@ function campKPI(c){
   return `<div class="cmp ${c.cls}">
    <div class="cmp-h"><div class="bar"></div><div class="ci"><div class="cname">${c.name}<span class="ctype">${c.type||''}</span></div><div class="cmeta">${c.meta}</div></div><div style="display:flex;gap:7px;flex-wrap:wrap">${c.badge}</div></div>
    <div class="cmp-b">
-    <div class="ckpi">${K.map(([l,st,v,u,d,inv],i)=>`<div class="ck ${i<2?'hi':''}"><div class="l"><span>${l}</span><span>${st}</span></div><div class="v">${v}<small>${u}</small></div><div class="c">${sgn(d,inv)}${l==='ROAS'?'%p':(l==='CTR'?'%p':'%')}</div></div>`).join('')}</div>
+    <div class="ckpi">${K.map(([l,st,v,u,d,inv],i)=>`<div class="ck ${i<2?'hi':''}"><div class="l"><span>${l}</span><span>${st}</span></div><div class="v">${v}<small>${u}</small></div><div class="c">${sgn(d,inv,(l==='ROAS'||l==='CTR')?'%p':'%')}</div></div>`).join('')}</div>
     <div class="cum"><div class="cum-l">누적 (${c.cum.period})</div>
      <div class="cum-i"><span>누적 지출</span><b>${c.cum.spend}</b><em class="cd mut">지난주 대비 ${c.cum.dspend}</em></div>
      <div class="cum-i"><span>누적 구매</span><b>${c.cum.pur}</b><em class="cd mut">지난주 대비 ${c.cum.dpur}</em></div>
@@ -819,9 +845,9 @@ function combo(node){
   const s=base(700000,fmt),bw=iw/DAYS.length*.58;
   TREND.spend.forEach((v,i)=>{const x=X(i)-bw/2,y=Y(v,700000);s.appendChild(el('rect',{x,y,width:bw,height:PT+ih-y,rx:3,fill:i>=7?'#c7d7f0':'#e6eaf0'}));});
   const p=TREND.pur.map((v,i)=>[X(i),Y(v,36)]);
-  s.appendChild(el('path',{d:'M '+p.map(q=>`${q[0]} ${q[1]}`).join(' L '),fill:'none',stroke:'#2F6FE0','stroke-width':2.2}));
-  p.forEach((q,i)=>{s.appendChild(el('circle',{cx:q[0],cy:q[1],r:3,fill:'#fff',stroke:'#2F6FE0','stroke-width':1.8}));
-   const t=el('text',{x:q[0],y:q[1]-8,fill:'#2F6FE0','font-size':8.5,'text-anchor':'middle','font-weight':700});t.textContent=TREND.pur[i];s.appendChild(t);});
+  s.appendChild(el('path',{d:'M '+p.map(q=>`${q[0]} ${q[1]}`).join(' L '),fill:'none',stroke:'#5B6B7E','stroke-width':2.2}));
+  p.forEach((q,i)=>{s.appendChild(el('circle',{cx:q[0],cy:q[1],r:3,fill:'#fff',stroke:'#5B6B7E','stroke-width':1.8}));
+   const t=el('text',{x:q[0],y:q[1]-8,fill:'#5B6B7E','font-size':8.5,'text-anchor':'middle','font-weight':700});t.textContent=TREND.pur[i];s.appendChild(t);});
   node.appendChild(s);
 }
 function multi(node,series,mx){
@@ -866,6 +892,37 @@ function bwCard(b){
 
 /* sortable creative table */
 const SORT={};
+function miniLine(vals,color){
+  const W=150,H=38,PL=3,PR=3,PT=6,PB=6,iw=W-PL-PR,ih=H-PT-PB;
+  const mx=Math.max(...vals,1)*1.12;
+  const X=i=>PL+iw*i/(vals.length-1),Y=v=>PT+ih*(1-v/mx);
+  const pts=vals.map((v,i)=>[X(i),Y(v)]);
+  const dline=pts.map((q,i)=>(i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' ');
+  const L=pts[pts.length-1];
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="msvg"><path d="${dline}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/><circle cx="${L[0].toFixed(1)}" cy="${L[1].toFixed(1)}" r="2.3" fill="#fff" stroke="${color}" stroke-width="1.5"/></svg>`;
+}
+function miniBars(vals,color){
+  const W=150,H=38,PL=3,PR=3,PT=6,PB=3,iw=W-PL-PR,ih=H-PT-PB;
+  const mx=Math.max(...vals,1),gw=iw/vals.length,bw=Math.max(2.4,gw*0.62);
+  let bars='';
+  vals.forEach((v,i)=>{const h=ih*v/mx,x=PL+gw*i+(gw-bw)/2,y=PT+ih-h;bars+=`<rect x="${x.toFixed(1)}" y="${(v>0?y:PT+ih-1).toFixed(1)}" width="${bw.toFixed(1)}" height="${(v>0?Math.max(h,1.5):1).toFixed(1)}" rx="1" fill="${v>0?color:'#E4EBF3'}"/>`;});
+  return `<svg viewBox="0 0 ${W} ${H}" class="msvg">${bars}</svg>`;
+}
+function creativeFlow(c){
+  const list=c.creatives.map(r=>({name:r[0],fl:CFLOW[c.id+'|'+r[0]]})).filter(x=>x.fl);
+  if(!list.length)return '';
+  list.sort((a,b)=>b.fl.p.reduce((s,v)=>s+v,0)-a.fl.p.reduce((s,v)=>s+v,0));
+  const rows=list.map(x=>{
+    const nz=x.fl.r.filter(v=>v>0);
+    const avg=nz.length?Math.round(nz.reduce((s,v)=>s+v,0)/nz.length):0;
+    const tot=x.fl.p.reduce((s,v)=>s+v,0);
+    return `<div class="cf-row"><div class="cf-nm">${x.name}</div>
+     <div class="cf-c"><div class="cf-hd"><span>ROAS 흐름</span><b>평균 ${avg}%</b></div>${miniLine(x.fl.r,c.color)}</div>
+     <div class="cf-c"><div class="cf-hd"><span>구매 흐름</span><b>${tot}건</b></div>${miniBars(x.fl.p,c.color)}</div></div>`;
+  }).join('');
+  return `<div class="cflow card"><div class="chead"><div class="ctitle">소재별 ROAS · 구매 흐름 <span class="mut">· 최근 14일 (${DAYS[0]}–${DAYS[DAYS.length-1]})</span></div></div>
+   <div class="cf-head"><span>소재</span><span>ROAS 흐름 (일별)</span><span>구매 흐름 (일별)</span></div>${rows}</div>`;
+}
 function creativeTable(c){
   const key=c.id, st=SORT[key]||{col:2,dir:-1};
   const rows=[...c.creatives].sort((a,b)=>{
@@ -904,7 +961,7 @@ function audience(){
     <table><thead><tr><th>연령</th><th>지출</th><th>구매</th><th>CPA</th><th>ROAS</th><th>지난주 ROAS</th><th>CTR</th><th>판정</th></tr></thead><tbody>${A}</tbody></table>
     ${ccBox([['g','핵심','<b>핵심 타겟 35-54세가 구매의 61%(85건) 주도.</b> 특히 45-54세가 ROAS 225.9%로 새 1위. 지난주 1위 55-64세는 325→155%로 급락.']])}
    </div>
-   <div class="card"><div class="chead"><div class="ctitle">연령대별 구매 · 성별</div><div class="legend"><span><i style="background:#06A6FF"></i>남성</span><span><i style="background:#7AC4FF"></i>여성</span></div></div>
+   <div class="card"><div class="chead"><div class="ctitle">연령대별 구매 · 성별</div><div class="legend"><span><i style="background:#3A3F47"></i>남성</span><span><i style="background:#9AA1AC"></i>여성</span></div></div>
     <div id="a_bar"></div>
     ${ccBox([['b','핵심','<b>핵심 타겟 35-54 여성이 구매 55건(전체의 39%)</b>으로 여전히 중심. 다만 여성 전체 ROAS는 230→174%로 하락, 남성(249%)에 역전당함.']])}
    </div></div>
@@ -924,26 +981,31 @@ function kpiExec(){
   return `<div class="kpis" style="grid-template-columns:repeat(5,1fr)">${C.map(([l,v,u,st,stt,d,g])=>`<div class="kpi"><div class="t"><span>${l}</span><span class="st ${st}">${stt}</span></div><div class="v">${v}<small>${u}</small></div><div class="d">${d}</div><div class="goal">${g}</div></div>`).join('')}</div>`;
 }
 
+function brandTrend(b){
+  const cs=b.camps.map(id=>CAMPS.find(c=>c.id===id));
+  if(cs.length===1)return cs[0].trend;
+  const n=cs[0].trend.length,out=[];
+  for(let i=0;i<n;i++){let num=0,den=0;cs.forEach(c=>{const v=c.trend[i],w=c.wk.spend||1;if(v!=null){num+=v*w;den+=w;}});out.push(den?num/den:0);}
+  return out;
+}
 function signalSection(){
-  const S=[
-   {cls:'c1',tone:'mid',short:CAMPS[0].short,st:'● Stable',bcls:'b-stable',roas:'225.1',roasOK:0,rprev:'265.3',cpa:'26,385',cpaSt:'●',cpaG:'초과 +20%',spend:'198만',pur:75,share:54,
-    vd:'지난주 265→225%로 하락. 주력 <b>11.영상h 약화</b>가 원인, 22.영상t가 새 주력으로 부상.',ac:'▶ 22.영상t 유지 · 11.영상h 대체 준비'},
-   {cls:'c2',tone:'mid',short:CAMPS[1].short,st:'● Stable',bcls:'b-stable',roas:'187.2',roasOK:0,rprev:'190.2',cpa:'26,708',cpaSt:'●',cpaG:'초과 +21%',spend:'128만',pur:48,share:34,
-    vd:'<b>29.영상29에 구매 98% 의존</b>, ROAS 187%로 정체. 28.영상z OFF는 실행됨.',ac:'▶ 시딩영상3(신규)·29 파생 테스트'},
-   {cls:'c3',tone:'win',short:CAMPS[2].short,st:'● 개선',bcls:'b-scale',roas:'157.3',roasOK:0,rprev:'50.9',cpa:'26,928',cpaSt:'●',cpaG:'초과 +22%',spend:'26.9만',pur:10,share:7,
-    vd:'<b>극적 반등.</b> 지난주 51→157%. 10.맘카페 CPA 84,974→26,170원 회복.',ac:'▶ 회복 유지 · 추가 관찰'},
-   {cls:'c4',tone:'mid',short:CAMPS[3].short,st:'● 신규',bcls:'b-watch',roas:'153.8',roasOK:0,rprev:'—',cpa:'41,475',cpaSt:'●',cpaG:'초과 +89%',spend:'29만',pur:7,share:5,
-    vd:'<b>신규 런칭 6일차.</b> 4.영상3이 구매 전담(194%), 비밀링크 구매 0.',ac:'▶ 7일 학습 관찰 · CPA 높음'}
+  const BS=[
+   {key:'b1',name:'쿨리',tone:'mid',st:'● 하락',bcls:'b-stable',roas:'210.2',roasOK:0,rprev:'235.2%',cpa:'26,511',cpaSt:'●',cpaG:'초과 +21%',spend:'326만',pur:123,share:88,
+    vd:'주력 <b>11.영상h·29.영상29 동반 약화</b>로 ROAS 235→210% 하락. 22.영상t·시딩영상3이 새 주력으로 부상.',ac:'▶ 22.영상t·시딩영상3 중심 재편 · 부진 소재 OFF'},
+   {key:'b2',name:'치카프렌즈',tone:'win',st:'● 개선',bcls:'b-scale',roas:'157.3',roasOK:0,rprev:'50.9%',cpa:'26,928',cpaSt:'●',cpaG:'초과 +22%',spend:'27만',pur:10,share:7,
+    vd:'<b>극적 반등.</b> 지난주 51→157%. 10.맘카페 CPA 84,974→26,170원 회복.',ac:'▶ 회복 유지 · 신규 Hero 소재 발굴'},
+   {key:'b3',name:'쿨픽',tone:'mid',st:'● 신규',bcls:'b-watch',roas:'153.8',roasOK:0,rprev:'신규',cpa:'41,475',cpaSt:'●',cpaG:'초과 +89%',spend:'29만',pur:7,share:5,
+    vd:'<b>신규 런칭 6일차 · 학습 단계.</b> 4.영상3이 구매 전담(194%), 비밀링크 구매 0.',ac:'▶ 7일 학습 관찰 · 신규 소재 투입'}
   ];
-  return `<section><div class="shead"><div class="snum">2</div><h2>캠페인 요약 <span class="hkr">· Campaign Summary</span></h2><div class="note">${META.period}</div></div>
-  <div class="sigs">${S.map(s=>`
-   <div class="sig ${s.cls} ${s.tone}"><div class="top"><div class="bar"></div><div class="nm">${s.short}</div><span class="badge ${s.bcls}">${s.st}</span></div>
+  return `<section><div class="shead"><div class="snum">2</div><h2>브랜드 요약 <span class="hkr">· Brand Summary</span></h2><div class="note">${META.period}</div></div>
+  <div class="sigs">${BS.map(s=>`
+   <div class="sig ${s.key} ${s.tone}"><div class="top"><div class="bar"></div><div class="nm">${s.name}</div><span class="badge ${s.bcls}">${s.st}</span></div>
     <div class="bd">
      <div class="big">
-      <div class="bigm"><div class="l"><span>ROAS</span><span>${s.roasOK?'✓':'✕'}</span></div><div class="v">${s.roas}<small>%</small></div><div class="g">목표 261% · 지난주 ${s.rprev}%</div></div>
+      <div class="bigm"><div class="l"><span>ROAS</span><span>${s.roasOK?'✓':'✕'}</span></div><div class="v">${s.roas}<small>%</small></div><div class="g">목표 261% · 지난주 ${s.rprev}</div></div>
       <div class="bigm"><div class="l"><span>CPA</span><span>${s.cpaSt}</span></div><div class="v">${s.cpa}<small>원</small></div><div class="g">목표 22,000원 · ${s.cpaG}</div></div>
      </div>
-     <div class="sigchart-h">ROAS 흐름 <span class="mut">· 최근 14일</span></div><div class="sigchart" id="sig_${s.cls}"></div>
+     <div class="sigchart-h">ROAS 흐름 <span class="mut">· 최근 14일</span></div><div class="sigchart" id="sig_${s.key}"></div>
      <div class="sub2">지출 <b>${s.spend}원</b> · 구매 <b>${s.pur}건</b> <span class="mut">(전체의 ${s.share}%)</span></div>
      <div class="vd">${s.vd}<span class="ac">${s.ac}</span></div>
     </div></div>`).join('')}</div></section>`;
@@ -983,6 +1045,16 @@ function detailSection(){
    <div class="dtog"><button id="moreBtn"></button></div>
    <div id="moreWrap" class="hide">${followUpSection()}${actionsFull()}${lifetime()}${audience()}${insightSection()}${nextTestSection()}</div>`;
 }
+function bindColl(){
+  document.querySelectorAll('.cdet-btn').forEach(btn=>{
+    const w=document.getElementById('cdet_'+btn.dataset.k); if(!w)return;
+    const key='metaCdet_'+btn.dataset.k;
+    let open=false; try{open=localStorage.getItem(key)==='1';}catch(e){}
+    const set=()=>{w.classList.toggle('hide',!open);btn.innerHTML=(open?'\u25B4 소재별 성과 접기':'\u25BE 소재별 성과 펼치기')+' <span class="cdet-n">'+btn.dataset.n+'개 소재</span>';try{localStorage.setItem(key,open?'1':'0');}catch(e){}};
+    btn.onclick=()=>{open=!open;set();};
+    set();
+  });
+}
 function bindDetail(){
   const b=document.getElementById('moreBtn'),w=document.getElementById('moreWrap');
   if(!b)return;
@@ -1008,7 +1080,7 @@ function barGroup(node,data){
   const gw=iw/data.length,bw=Math.min(22,gw*0.28);
   data.forEach((d,i)=>{
     const cx=PL+gw*(i+0.5);
-    [[d[1],'#06A6FF',-bw*0.6],[d[2],'#7AC4FF',bw*0.6]].forEach(([v,c,off])=>{
+    [[d[1],'#3A3F47',-bw*0.6],[d[2],'#9AA1AC',bw*0.6]].forEach(([v,c,off])=>{
       const h=ih*v/max,x=cx+off-bw/2,y=PT+ih-h;
       s.appendChild(el('rect',{x,y,width:bw,height:Math.max(h,0),rx:3,fill:c}));
       if(v>0){const t=el('text',{x:cx+off,y:y-5,fill:c,'font-size':9,'font-weight':700,'text-anchor':'middle'});t.textContent=v;s.appendChild(t);}
@@ -1035,8 +1107,8 @@ function sparkline(node,data,color,goal){
   const mx=Math.max(...data,goal)*1.08,mn=Math.min(...data)*0.9;
   const X=i=>PL+iw*i/(data.length-1),Y=v=>PT+ih*(1-(v-mn)/(mx-mn));
   const s=el('svg',{viewBox:`0 0 ${W} ${H}`});
-  if(goal!=null){const gy=Y(goal);s.appendChild(el('line',{x1:PL,x2:W-PR,y1:gy,y2:gy,stroke:'#0B62D6','stroke-width':1.2,'stroke-dasharray':'5 4'}));
-    const t=el('text',{x:W-PR,y:gy-4,fill:'#0B62D6','font-size':9,'text-anchor':'end','font-weight':700});t.textContent='목표 '+goal;s.appendChild(t);}
+  if(goal!=null){const gy=Y(goal);s.appendChild(el('line',{x1:PL,x2:W-PR,y1:gy,y2:gy,stroke:'#9AA1AC','stroke-width':1.2,'stroke-dasharray':'5 4'}));
+    const t=el('text',{x:W-PR,y:gy-4,fill:'#9AA1AC','font-size':9,'text-anchor':'end','font-weight':700});t.textContent='목표 '+goal;s.appendChild(t);}
   const pts=data.map((v,i)=>[X(i),Y(v)]);
   const id='sp'+Math.random().toString(36).slice(2,6);
   const defs=el('defs',{}),g=el('linearGradient',{id,x1:0,y1:0,x2:0,y2:1});
@@ -1058,7 +1130,7 @@ function roasChart(node,data,goal,color,opts){
   const pts=data.map((v,i)=>[X(i),Y(v)]);
   const svg=el('svg',{viewBox:`0 0 ${VW} ${VH}`,preserveAspectRatio:'none','class':'ic-svg'});
   if(showGrid){for(let g=0;g<=4;g++){const y=PT+ih*g/4;svg.appendChild(el('line',{x1:PL,x2:VW-PR,y1:y,y2:y,stroke:'#EEF1F5','stroke-width':1,'vector-effect':'non-scaling-stroke'}));}}
-  if(goal!=null){const gy=Y(goal);svg.appendChild(el('line',{x1:PL,x2:VW-PR,y1:gy,y2:gy,stroke:'#0B62D6','stroke-width':1.3,'stroke-dasharray':'6 5','vector-effect':'non-scaling-stroke'}));}
+  if(goal!=null){const gy=Y(goal);svg.appendChild(el('line',{x1:PL,x2:VW-PR,y1:gy,y2:gy,stroke:'#9AA1AC','stroke-width':1.3,'stroke-dasharray':'6 5','vector-effect':'non-scaling-stroke'}));}
   const id='rc'+Math.random().toString(36).slice(2,6),defs=el('defs',{}),lg=el('linearGradient',{id,x1:0,y1:0,x2:0,y2:1});
   lg.appendChild(el('stop',{offset:'0%','stop-color':color,'stop-opacity':.20}));
   lg.appendChild(el('stop',{offset:'100%','stop-color':color,'stop-opacity':0}));
@@ -1097,7 +1169,7 @@ function miniRoas(node,data,color,goal){
   const mx=Math.max(...data,goal)*1.06,mn=Math.min(...data)*0.9;
   const X=i=>PL+iw*i/(data.length-1),Y=v=>PT+ih*(1-(v-mn)/(mx-mn));
   const s=el('svg',{viewBox:`0 0 ${W} ${H}`,preserveAspectRatio:'none'});
-  if(goal!=null){const gy=Y(goal);s.appendChild(el('line',{x1:PL,x2:W-PR,y1:gy,y2:gy,stroke:'#0B62D6','stroke-width':1.2,'stroke-dasharray':'5 4','vector-effect':'non-scaling-stroke'}));}
+  if(goal!=null){const gy=Y(goal);s.appendChild(el('line',{x1:PL,x2:W-PR,y1:gy,y2:gy,stroke:'#9AA1AC','stroke-width':1.2,'stroke-dasharray':'5 4','vector-effect':'non-scaling-stroke'}));}
   const pts=data.map((v,i)=>[X(i),Y(v)]);
   const id='mr'+Math.random().toString(36).slice(2,6),defs=el('defs',{}),lg=el('linearGradient',{id,x1:0,y1:0,x2:0,y2:1});
   lg.appendChild(el('stop',{offset:'0%','stop-color':color,'stop-opacity':.20}));
@@ -1146,11 +1218,12 @@ function renderAll(){
   + signalSection()
   + nextWeekSection()
   + detailSection();
-  CAMPS.forEach(c=>{const sc=document.getElementById('sig_'+c.id);if(sc)roasChart(sc,c.trend,261,c.color,{labels:false,grid:false});});
+  BRANDS.forEach(b=>{const sc=document.getElementById('sig_'+b.id);if(sc)roasChart(sc,brandTrend(b),261,b.color,{labels:false,grid:false});});
   {const sp=document.getElementById('t_spark');if(sp)roasChart(sp,TREND.roas,261);}
   {const ab=document.getElementById('a_bar');if(ab)barGroup(ab,AGEGENDER);}
   {const hero=document.querySelector('.topcards .tc.hero');if(hero){const h=hero.offsetHeight;document.querySelectorAll('.topcards .tc').forEach(c=>{c.style.height=h+'px';});}}
   bindDetail();
+  buildSecNav();wrapDeltas();
 }
 
 function renderCamp(c){
@@ -1169,6 +1242,8 @@ function renderCamp(c){
   donut(box,c.donut);
   document.getElementById('cd2').appendChild(box.lastChild);
   bindSort();
+  bindColl();
+  buildSecNav();wrapDeltas();
 }
 
 function footer(){
@@ -1192,6 +1267,50 @@ function bindSort(){
   });
 }
 
+/* ============ DIRECTIONAL COLORS + SECTION NAV ============ */
+function wrapDeltas(root){
+  root=root||document.getElementById('app'); if(!root)return;
+  const REG=/([\u25B2\u25BC])\s?(\d[\d.,]*)\s?(%p|%|건|원|만원|만|p)?/g;
+  const walk=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(n){
+    if(!n.nodeValue||!/[\u25B2\u25BC]/.test(n.nodeValue))return NodeFilter.FILTER_REJECT;
+    const p=n.parentNode; if(!p)return NodeFilter.FILTER_REJECT;
+    if(p.classList&&p.classList.contains('dv'))return NodeFilter.FILTER_REJECT;
+    if(p.nodeName==='SCRIPT'||p.nodeName==='STYLE')return NodeFilter.FILTER_REJECT;
+    return NodeFilter.FILTER_ACCEPT;
+  }});
+  const nodes=[]; let x; while(x=walk.nextNode())nodes.push(x);
+  nodes.forEach(n=>{
+    const str=n.nodeValue; REG.lastIndex=0;
+    if(!REG.test(str))return; REG.lastIndex=0;
+    const frag=document.createDocumentFragment(); let last=0,m;
+    while(m=REG.exec(str)){
+      if(m.index>last)frag.appendChild(document.createTextNode(str.slice(last,m.index)));
+      const sp=document.createElement('span'); sp.className='dv '+(m[1]==='\u25B2'?'u':'d'); sp.textContent=m[0];
+      frag.appendChild(sp); last=m.index+m[0].length;
+    }
+    if(last<str.length)frag.appendChild(document.createTextNode(str.slice(last)));
+    n.parentNode.replaceChild(frag,n);
+  });
+}
+function applyTheme(color){
+  const rs=document.documentElement.style;
+  if(color){rs.setProperty('--primary',color);rs.setProperty('--primary-weak',color+'1a');rs.setProperty('--primary-bd',color+'55');}
+  else{rs.setProperty('--primary','#17191D');rs.setProperty('--primary-weak','#F0F1F3');rs.setProperty('--primary-bd','#D9DCE1');}
+}
+function buildSecNav(){
+  const nav=document.getElementById('secnav'); if(!nav)return;
+  const secs=[...document.querySelectorAll('#app section')];
+  nav.innerHTML=secs.map((sec,i)=>{
+    sec.id='sec-'+i;
+    const num=sec.querySelector('.snum'), h=sec.querySelector('h2');
+    const label=h?((h.childNodes[0]&&h.childNodes[0].textContent)||'').trim():('섹션 '+(i+1));
+    const n=num?num.textContent.trim():'';
+    return '<button class="snav" data-t="sec-'+i+'">'+(n?'<span class="snav-n">'+n+'</span>':'')+label+'</button>';
+  }).join('');
+  setSecNavTop();
+}
+function setSecNavTop(){const tb=document.querySelector('.topbar'),nv=document.getElementById('secnav');if(tb&&nv)nv.style.top=tb.offsetHeight+'px';}
+
 /* ============ ROUTER ============ */
 let VIEW='all';
 function tabs(){
@@ -1210,7 +1329,7 @@ function brandKPI(b){
     <div class="cum-i"><span>평균 CPA</span><b>${b.cum.cpa}</b><em class="cd ${b.cum.dcpaC}">지난주 대비 ${b.cum.dcpa}</em></div>
     <div class="cum-i"><span>평균 ROAS</span><b>${b.cum.roas}</b><em class="cd ${b.cum.droasC}">지난주 대비 ${b.cum.droas}</em></div></div>
    <div style="font-size:11.5px;color:var(--tx3);margin:11px 2px 0;font-weight:500">구성 · ${b.split}</div>
-   ${ccBox(b.verdict)}`;
+   ${ccBox(b.verdict.map(v=>['b',v[1],v[2]]))}`;
 }
 
 function renderBrand(b){
@@ -1224,7 +1343,10 @@ function renderBrand(b){
       <div class="card"><div class="chead"><div class="ctitle">ROAS 흐름 (14일)</div><div class="legend"><span><i style="background:${c.color}"></i>ROAS</span><span><i class="dash"></i>목표 261%</span></div></div><div id="ct_${c.id}" class="ichart"></div></div>
       <div class="card"><div class="chead"><div class="ctitle">소재별 구매 랭킹</div><div class="legend"><span>주간 구매 ${c.wk.pur}건</span></div></div><div id="dn_${c.id}"></div>${ccBox([['','효율지수','<b>구매 비중 ÷ 지출 비중.</b> <span class="eff-g">1.0↑</span> 우수·유지 / <span class="eff-r">0.7↓</span> OFF 후보.']])}</div>
      </div>
-     <div style="margin-top:14px">${creativeTable(c)}</div>
+     <div class="cdet" style="margin-top:14px">
+      <div class="cdtog"><button class="cdet-btn" data-k="${c.id}" data-n="${c.creatives.length}"></button></div>
+      <div class="cdet-wrap hide" id="cdet_${c.id}">${creativeTable(c)}${creativeFlow(c)}</div>
+     </div>
      <div class="g2" style="margin-top:14px">${bwCard(c.best)}${bwCard(c.worst)}</div>
     </section>`;
   });
@@ -1235,13 +1357,15 @@ function renderBrand(b){
     donut(document.getElementById('dn_'+c.id),c.donut);
   });
   bindSort();
+  bindColl();
+  buildSecNav();wrapDeltas();
 }
 
 function route(){
   if(VIEW!=='all' && !BRANDS.some(b=>b.id===VIEW))VIEW='all';
   tabs();
-  if(VIEW==='all')renderAll();
-  else renderBrand(BRANDS.find(b=>b.id===VIEW));
+  if(VIEW==='all'){applyTheme(null);renderAll();}
+  else{const bb=BRANDS.find(b=>b.id===VIEW);applyTheme(bb.color);renderBrand(bb);}
 }
 try{const v=localStorage.getItem('metaView'); if(v)VIEW=v;
     const s=localStorage.getItem('metaSort'); if(s)Object.assign(SORT,JSON.parse(s));}catch(e){}
@@ -1249,6 +1373,18 @@ document.getElementById('p1').textContent=META.period.slice(5);
 document.getElementById('p2').textContent=META.prev.slice(5);
 document.getElementById('upd').textContent=META.dataEnd;
 route();
+document.getElementById('secnav').addEventListener('click',e=>{
+  const btn=e.target.closest('.snav'); if(!btn)return;
+  const t=document.getElementById(btn.dataset.t); if(!t)return;
+  const w=document.getElementById('moreWrap');
+  if(w&&w.contains(t)&&w.classList.contains('hide')){const mb=document.getElementById('moreBtn');if(mb)mb.click();}
+  const tb=document.querySelector('.topbar'),nv=document.getElementById('secnav');
+  const off=(tb?tb.offsetHeight:0)+(nv?nv.offsetHeight:0)+10;
+  const y=t.getBoundingClientRect().top+window.pageYOffset-off;
+  window.scrollTo({top:y,behavior:'smooth'});
+  document.querySelectorAll('.snav.on').forEach(x=>x.classList.remove('on'));btn.classList.add('on');
+});
+window.addEventListener('resize',setSecNavTop);setSecNavTop();
 
 /* ================= 검색 ================= */
 (function(){
